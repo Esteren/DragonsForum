@@ -5,7 +5,7 @@ cache/*
 !cache/index.html
 
 composer.phar
-config*.php
+/config*.php
 
 ext/*
 
@@ -15,17 +15,17 @@ images/avatars/gallery/*
 images/avatars/upload/*
 images/ranks/*
 
-install*
+/install*
 
 language/*
 !language/en
 
-store/*
+/store/*
 
-styles/*
-!styles/prosilver
-!styles/AnimeZone
-!styles/subsilver2
+/styles/*
+!/styles/prosilver
+!/styles/AnimeZone
+!/styles/subsilver2
 
-vendor
+/vendor
 
