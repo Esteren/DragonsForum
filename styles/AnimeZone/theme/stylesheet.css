@@ -796,8 +796,9 @@ a.imageset {
 /* Global imageset items */
 .imageset.site_logo {
 	background-image: url("./images/logo.jpg");
-	padding-left: 872px;
+	padding-left: 870px;
 	padding-top: 127px;
+	background-size: cover;
 }
 .imageset.upload_bar {
 	background-image: url("./images/upload_bar.gif");
