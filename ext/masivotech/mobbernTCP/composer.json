@@ -1,0 +1,26 @@
+{
+   "name": "masivotech/mobbernTCP",
+   "type": "phpbb-extension",
+   "description": "Theme Control Panel for Mobbern - phpBB3.1 Theme",
+   "homepage": "http://www.masivotech.com",
+   "version": "3.1.0",
+   "time": "2014-12-03",
+   "license": "PRIVATE",
+   "authors": [
+      {
+         "name": "Masivotech",
+         "email": "support@masivotech.com",
+         "homepage": "http://www.masivotech.com",
+         "role": "Lead Developer"
+      }
+   ],
+   "require": {
+      "php": ">=5.3.3"
+   },
+   "extra": {
+      "display-name": "Mobbern3.1 Theme Control Panel",
+      "soft-require": {
+         "phpbb/phpbb": ">=3.1.0-RC2"
+      }
+   }
+}

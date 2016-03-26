@@ -1,0 +1,29 @@
+services:
+    masivotech.mobbernTCP.controller:
+        class: masivotech\mobbernTCP\controller\main
+        arguments:
+            - @auth
+            - @config
+            - @template
+            - @user
+            - @controller.helper
+            - %core.root_path%
+            - %core.php_ext%
+            - @masivotech.mobbernTCP.controller.settings
+    masivotech.mobbernTCP.controller.settings:
+        class: masivotech\mobbernTCP\controller\settings
+        arguments:
+            - @auth
+            - @config
+            - @request
+            - @user
+            - @controller.helper
+    masivotech.mobbernTCP.listener:
+        class: masivotech\mobbernTCP\event\main_listener
+        arguments:
+            - @config
+            - @template
+            - @user
+            - @controller.helper
+        tags:
+            - { name: event.listener }

@@ -7,9 +7,6 @@ cache/*
 composer.phar
 /config*.php
 
-ext/*
-!ext/.gitkeep
-
 files/*
 !files/.gitkeep
 

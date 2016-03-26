@@ -1,0 +1,10 @@
+m_mTCP_base:
+    path: /mobbern-tcp
+    defaults: { _controller: masivotech.mobbernTCP.controller:base }
+
+m_mTCP_settings:
+    pattern: /mobbern-tcp/settings
+    defaults: { _controller: masivotech.mobbernTCP.controller.settings:manage }
+
+m_Mobbern_home:
+  pattern: ../
