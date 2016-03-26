@@ -1,1 +1,22 @@
 /* ADD CUSTOM CSS HERE */
+
+img {
+    max-width: 100%;
+}
+
+#caption_banner {
+    background-image: url('/images/banner.jpg');
+    background-size: cover;
+    background-position: center center;
+    width: 100%;
+    left: 0;
+    right: 0;
+    min-height: 178px;
+}
+
+@media (max-width: 560px) {
+    #page-header .carousel .item {
+        min-height: 178px;
+    }
+}
+
