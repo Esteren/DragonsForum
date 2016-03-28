@@ -11,12 +11,12 @@ img {
     width: 100%;
     left: 0;
     right: 0;
-    min-height: 178px;
+    color: transparent;
+    text-align: center;
 }
 
-@media (max-width: 560px) {
-    #page-header .carousel .item {
-        min-height: 178px;
-    }
+/** Use #phpbb to force override **/
+#phpbb #main-navbar .nav>li>a {
+    text-transform: initial;
 }
 
