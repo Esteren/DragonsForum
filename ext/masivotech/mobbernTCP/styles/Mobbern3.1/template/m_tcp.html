@@ -162,7 +162,7 @@ GENERAL SETTINGS :
       </div><!-- /#logo-opts.panel -->
       </div><!-- /.row -->
       <div class="row">
-      
+
       <div id="footernote-opts" class="panel col-md-12">
         <div class="panel-heading">
           <h3><i class="fa fa-copyright"></i> Footer Copyright Note</h3>
@@ -178,7 +178,16 @@ GENERAL SETTINGS :
             </label>
           </dt>
           <dd>
-            <input type="text" id="set_footerCopyright" name="mbrn_footerCopyright" value="{MBRN_FOOTER_COPYRIGHT}">
+            <!--
+              By Pierstoval: override this behavior in the theme administrator,
+              because we want to hard code the footer copyright message in "minimal" footer.
+              As it's not done in others template, it allows flexibility.
+            -->
+            <!-- IF MBRN_LAYOUT_FOOTER == "minimal" -->
+              <input readonly disabled type="text" id="set_footerCopyright" name="mbrn_footerCopyright" value="Disabled because hard coded in the template">
+            <!-- ELSE -->
+              <input type="text" id="set_footerCopyright" name="mbrn_footerCopyright" value="{MBRN_FOOTER_COPYRIGHT}">
+            <!-- ENDIF -->
           </dd>
         </dl>
         </div>
@@ -334,7 +343,7 @@ DESIGN SETTINGS :
 
             <div class="float-clear"></div>
 
-            <div class="btn-group btn-group-justified">  
+            <div class="btn-group btn-group-justified">
               <div class="btn-group">
                 <button id="preview_theme" type="button" class="btn btn-default" onClick="previewTheme(color_var, scss_file)">Preview Theme</button>
               </div>
@@ -532,7 +541,7 @@ DESIGN SETTINGS :
 
         </div>
       </div><!-- /#font-opts.panel -->
-      </div><!-- /.row -->      
+      </div><!-- /.row -->
 
 
 
@@ -865,7 +874,7 @@ SIDEBAR WIDGETS SETTINGS :
 
         <dl class="option">
           <dt>
-            <label for="set_wColTxt">Widget Content 
+            <label for="set_wColTxt">Widget Content
               <i>Text for the content of the widget<br/><strong>phpBB3 allows max 255 chars</strong></i>
             </label>
           </dt>
@@ -916,7 +925,7 @@ SIDEBAR WIDGETS SETTINGS :
 
         <dl class="option">
           <dt>
-            <label for="set_wTxtTXT">Widget Content 
+            <label for="set_wTxtTXT">Widget Content
               <i>Text for the content of the widget<br/><strong>phpBB3 allows max 255 chars</strong></i>
             </label>
           </dt>
@@ -1041,10 +1050,10 @@ ADS SETTINGS :
 <script type="text/javascript" src="{T_THEME_PATH}/js/custom-theme-generator.js"></script>
 <script type="text/javascript">
 $(document).ready(function(){
-  
+
   initThemeGenerator();
   scss_file = "{T_THEME_PATH}/scss/color-theme-frontend.scss";
-  
+
   $('#preview_theme').popover({
     title: "Preview Theme",
     content: "Preview your theme on the current page",

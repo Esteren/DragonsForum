@@ -79,7 +79,10 @@ class settings
       $this->config->set('mbrn_logoIcon',         $this->request->variable('mbrn_logoIcon',        '0'));
       $this->config->set('mbrn_logoImg',          $this->request->variable('mbrn_logoImg',         '0'));
       $this->config->set('mbrn_favicon',          $this->request->variable('mbrn_favicon',         '0'));
-      $this->config->set('mbrn_footerCopyright',  $this->request->variable('mbrn_footerCopyright', '0'));
+
+      // By Pierstoval: Set '' as default because else it shows "0" when the input is disabled
+      $this->config->set('mbrn_footerCopyright',  $this->request->variable('mbrn_footerCopyright', ''));
+
       $this->config->set('mbrn_footerFb',         $this->request->variable('mbrn_footerFb',        '0'));
       $this->config->set('mbrn_footerGp',         $this->request->variable('mbrn_footerGp',        '0'));
       $this->config->set('mbrn_footerTw',         $this->request->variable('mbrn_footerTw',        '0'));
