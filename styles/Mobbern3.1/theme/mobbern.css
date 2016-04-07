@@ -143,7 +143,7 @@ body * { -webkit-backface-visibility: hidden; }
 .subheader {
   font-size: 0.5em;
   font-weight: 400;
-  color: #888;
+  color: #aaa;
   margin-top: 5px;
 }
 
@@ -228,7 +228,7 @@ body, body.rtl {
   font-family: "Open Sans", Helvetica, Arial, sans-serif;
   font-size: 13px;
   line-height: 22px;
-  color: #666;
+  color: #333;
   background-color: #EBEBEB;
 }
 
@@ -248,7 +248,7 @@ body, .container, #header-big, .cp-container, #tabs { min-width: 320px; }
 }
 
 blockquote {
-  background-color: #FFF;
+  background-color: rgba(221, 221, 221, 0.9);
   margin: 0.5em 1px 0.5em 25px;
   overflow: hidden;
   padding: 5px;
@@ -259,7 +259,7 @@ blockquote {
 li.reported:hover { background-color: #FFEDA3 !important; }
 
 #format-buttons input,
-#format-buttons select { 
+#format-buttons select {
   margin: 1px 0;
   padding: 8px 15px;
   min-height: 38px;
@@ -298,7 +298,8 @@ li.pagination span a:hover,
 
 .forum-info-text ul li,
 .pagination ul li { margin: 0; float: left; }
-
+.forum-info-text ul li, .pagination ul li { color: #999; }
+.forum-info-text ul li a, .pagination ul li a { color: #fff; }
 .forum-info-text .dropdown-menu { padding: 15px; line-height: 22px; }
 
 /* #page-body h2 */
@@ -307,13 +308,13 @@ li.pagination span a:hover,
   font-weight: 300;
   margin: 0 0 40px;
 }
-#page-body>h2>a:link, #page-body>h2>a:visited { color: #444; }
+#page-body>h2>a:link, #page-body>h2>a:visited { color: #eee; }
 
 .inputbox {
   margin: 0;
   padding: 8px 15px;
   border: none;
-  color: #666;
+  color: #333;
   border: solid 1px #EEE;
 }
 
@@ -357,7 +358,7 @@ a.button1:hover, input.button1:hover, a.button2:hover, input.button2:hover, inpu
   color: #FFF;
 }
 
-dd label { color: #666; }
+dd label { color: #333; }
 
 html>body dd label input { vertical-align: text-top; }
 
@@ -424,7 +425,7 @@ input.tiny { width: 150px; }
 select {
   border: none;
   background-color: #FAFAFA;
-  color: #666;
+  color: #000;
   padding: 9px 0 10px 5px;
   outline: none;
 }
@@ -443,8 +444,8 @@ fieldset.jumpbox {
 
 .viewforum-stats div.rules.panel { padding: 0;}
 
-.bg1 { background-color: #F9F9F9; }
-.bg2 { background-color: #FFF; }
+.bg1 { background-color: rgba(238, 238, 238, 0.9); }
+.bg2 { background-color: rgba(255, 255, 255, 0.9); }
 .post {
   padding: 0;
   margin-bottom: 1px;
@@ -472,7 +473,7 @@ a.top {
   padding: 15px;
   margin: 0;
   min-height: 80px;
-  color: #666;
+  color: #333;
   border: none;
   width: 22%;
   float: left;
@@ -569,7 +570,6 @@ p.author {
   min-height: 3em;
   overflow: hidden;
   line-height: 1.4em;
-  color: #555;
   padding-bottom: 15px;
 }
 
@@ -1067,7 +1067,7 @@ fieldset.display-actions.buttons-list > * {
 .cp-wrapper fieldset.display-actions a, fieldset.display-actions.buttons-list a { display: inline-block; }
 
 .topiclist.cplist dl {
-  margin: 0; 
+  margin: 0;
   padding: 4px 0;
 }
 #cp-main .panel li.row {
@@ -1403,7 +1403,7 @@ hr {
 #main-navbar .float-right>.nav>li>a { z-index: auto }
 #main-navbar .nav>li.active>a {
   background-color: #F5F5F5;
-  color: #666;
+  color: #333;
   font-weight: 700;
 }
 #main-navbar .caret {
@@ -1421,7 +1421,7 @@ hr {
   background-color: #FFF;
   border: none;
   border-radius: 0;
-  color: #666;
+  color: #333;
   -webkit-box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
   box-shadow: 0 2px 15px 0 rgba(0,0,0,0.2);
 }
@@ -1537,7 +1537,7 @@ li.controls-btn>.dropdown-menu {
   display: block;
   width: 90%;
   max-width: 320px;
-  color: #666;
+  color: #333;
 }
 .mega-menu .headline-panel img {
   width: 100%;
@@ -1876,7 +1876,7 @@ ul.topiclist li.row:nth-child(even) { background-color: #F9F9F9; }
 a.subforum {
   position: relative;
   white-space: nowrap;
-  
+
   padding: 6px 0 6px 22px;
   line-height: 21px;
   background-size: 19px;
@@ -1901,7 +1901,7 @@ li.row dt {
 
 a.forumtitle, a.topictitle {  font-weight: 600; }
 a.topictitle { font-weight: 400; }
-ul.topiclist li { color: #888; }
+ul.topiclist li { /*color: #888;*/ }
 
 li.header .icon { color: #FFF }
 
@@ -2105,14 +2105,25 @@ a.notification-block {
   line-height: 38px;
   display: block;
 }
+.info-block.jumpbox,
+.footer-opts,
+.footer-opts ul.linklist li a
+{
+  color: #aaa;
+}
+.info-block.jumpbox a { color: #fff; }
+.info-block .display-options label { color: #999; }
 .info-block .display-options { margin: 0; }
 .info-block .display-options input[type="checkbox"], .info-block .display-options input[type="radio"] { display: inline-block; }
 .info-block .display-options select {
   background: transparent;
   font-weight: 600;
-  color: #333;
+  color: #aaa;
   height: 38px;
   vertical-align: baseline;
+}
+.info-block .display-options select option {
+  color: #000;
 }
 .info-block .display-options .button2 {
   background-color: transparent;
@@ -2136,7 +2147,7 @@ a.notification-block {
   float: left;
   margin-right: 20px;
   line-height: 38px;
-  color: #666;
+  color: #999;
 }
 
 
@@ -2424,7 +2435,7 @@ dl.details dt {
 
   -webkit-box-shadow: inset 0 0 25px 10px rgba(0, 0, 0, 0);
   box-shadow: inset 0 0 25px 10px rgba(0, 0, 0, 0);
-  
+
   -moz-transform: scale(1.2);
   -webkit-transform: scale(1.2);
   -o-transform: scale(1.2);
@@ -2519,7 +2530,7 @@ h1,h2,h3,h4,h5,h6, .header, .nav.nav-tabs, #tabs { font-family: 'Roboto Slab', s
 }
 
 /* Ads */
-.adspace { overflow: hidden } 
+.adspace { overflow: hidden }
 
 .inpage-adspace {
   line-height: 90px;
