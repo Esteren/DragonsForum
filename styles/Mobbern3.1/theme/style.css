@@ -20,3 +20,7 @@ img {
     text-transform: initial;
 }
 
+em {
+    font-style: italic;
+}
+
