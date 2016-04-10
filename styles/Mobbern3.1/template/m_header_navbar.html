@@ -19,7 +19,7 @@
           <img src="{MBRN_LOGO_IMG}" alt="{SITENAME}" />
           <!-- IF MBRN_LOGO_TEXT != null -->{MBRN_LOGO_TEXT}<!-- ELSE -->{SITENAME}<!-- ENDIF -->
           <!-- ELSE -->
-          
+
           <i class="icon fa <!-- IF MBRN_LOGO_ICON != null -->{MBRN_LOGO_ICON}<!-- ELSE -->fa-home<!-- ENDIF -->"></i>
           <!-- IF MBRN_LOGO_TEXT != null -->{MBRN_LOGO_TEXT}<!-- ELSE -->{SITENAME}<!-- ENDIF -->
 
@@ -82,6 +82,7 @@
             <!-- ENDIF -->
 
             <li><a href="{U_SEARCH_ACTIVE_TOPICS}"><i class="fa fa-exchange"></i>{L_SEARCH_ACTIVE_TOPICS}</a></li>
+            <li><a href="{U_SEARCH_UNREAD}"><i class="fa fa-eye-slash"></i>{L_SEARCH_UNREAD}</a></li>
             <li><a href="{U_SEARCH_UNANSWERED}"><i class="fa fa-folder"></i>{L_SEARCH_UNANSWERED}</a></li>
 
             <!-- IF not S_IS_BOT and U_MARK_FORUMS -->
@@ -99,7 +100,7 @@
             <!-- ENDIF -->
 
             <li><a href="{U_FAQ}" title="{L_FAQ_EXPLAIN}"><i class="fa fa-question"></i>{L_FAQ}</a></li>
-          
+
             <!-- IF S_DISPLAY_MEMBERLIST -->
             <li class="divider"></li>
             <li><a href="{U_MEMBERLIST}" title="{L_MEMBERLIST_EXPLAIN}"><i class="fa fa-users"></i>{L_MEMBERLIST}</a></li>
@@ -111,7 +112,7 @@
         </li>
 
         <!-- START: User Menu Items -->
-        
+
         <!-- END: User Menu Items -->
 
         <!-- IF MBRN_MENU_LINK1 != null -->
@@ -154,7 +155,7 @@
 
        <!-- User Menu : -->
        <ul id="user-menu" class="dropdown-menu">
-        
+
         <li><a href="{U_PROFILE}" title="{L_PROFILE}" accesskey="e"><i class="fa fa-user"></i>{L_PROFILE}</a></li>
 
         <!-- IF U_ACP -->
@@ -181,7 +182,7 @@
         <li class="divider"></li>
 
         <li><a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" accesskey="x"><i class="fa fa-sign-out"></i>{L_LOGOUT} {S_USERNAME}</a></li>
-       
+
        </ul>
        <!-- /#user-menu -->
 
@@ -190,13 +191,13 @@
      <li class="dropdown login-box-toggle">
       <a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" class="dropdown-toggle" data-toggle="dropdown" accesskey="x">
        <i class="icon fa fa-power-off"></i><span class="inner-text">{L_LOGIN}</span><span class="caret"></span></a>
-    
+
        <div class="dropdown-menu" role="login">
 
        <!-- LOGIN-BOX -->
 
          <div class="login-box">
-         
+
          <form action="{S_LOGIN_ACTION}" method="post" id="login">
          <fieldset>
            <dl>
@@ -213,7 +214,7 @@
 
            <dl>
             <dd class="float-left"><a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a></dd>
-  		 
+
              <!-- IF S_AUTOLOGIN_ENABLED -->
              <dd class="text-left float-right"><label for="viewonline">
              <input type="checkbox" name="viewonline" id="viewonline" tabindex="5" /> Invisible</label>
@@ -262,7 +263,7 @@
       </div><!-- /#navbar-searchbox-container -->
      </li>
     <!-- ENDIF -->
-    </ul>			      
+    </ul>
     </div><!-- /.float-right -->
   </div><!-- /.nav-content -->
 </div><!-- /.container -->
