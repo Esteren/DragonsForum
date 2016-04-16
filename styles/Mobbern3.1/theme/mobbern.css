@@ -2758,13 +2758,13 @@ ul.topiclist li.row:hover,
 .post:hover,
 .unreadpost {
   position: relative;
-  z-index: 99;
+  z-index: 9;
 
   -webkit-box-shadow: 0 3px 25px 0 rgba(0,0,0,0.2);
           box-shadow: 0 3px 25px 0 rgba(0, 0, 0, 0.2);
 }
 
-.post:target, .unreadpost { z-index: 998; }
+/* .post:target, .unreadpost { z-index: 998; } */
 
 .fa.lazyIcon {
   opacity: 1;
