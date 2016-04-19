@@ -14,10 +14,10 @@ $text = isset($_GET['text']) ? $_GET['text'] : null;
 if (!$text) {
     header('X-DiceError: No text provided');
     http_response_code(400);
-    return ''
+    return '';
 }
 
-preg_match('~^(?<amount>\d+)?d(?<size>\d+)(?<offset>[+-]\d+)??~iu', $text, $matches);
+preg_match('~^(?<amount>\d+)?d(?<size>\d+)(?<offset>[+-]\d+)?~iu', $text, $matches);
 
 if (!isset($matches['size'])) {
     header('X-DiceError: No size matching');
