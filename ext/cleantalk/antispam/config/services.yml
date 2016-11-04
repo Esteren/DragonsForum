@@ -1,0 +1,11 @@
+services:
+    cleantalk.antispam.listener:
+        class: cleantalk\antispam\event\main_listener
+        arguments:
+            - @template
+            - @config
+            - @user
+            - @request
+            - @dbal.conn
+        tags:
+            - { name: event.listener }
