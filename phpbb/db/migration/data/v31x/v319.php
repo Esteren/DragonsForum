@@ -11,27 +11,26 @@
 *
 */
 
-namespace phpbb\db\migration\data\v310;
+namespace phpbb\db\migration\data\v31x;
 
-class rc4 extends \phpbb\db\migration\migration
+class v319 extends \phpbb\db\migration\migration
 {
 	public function effectively_installed()
 	{
-		return phpbb_version_compare($this->config['version'], '3.1.0-RC4', '>=');
+		return phpbb_version_compare($this->config['version'], '3.1.9', '>=');
 	}
 
 	static public function depends_on()
 	{
 		return array(
-			'\phpbb\db\migration\data\v310\rc3',
-			'\phpbb\db\migration\data\v310\notifications_use_full_name',
+			'\phpbb\db\migration\data\v31x\v319rc1',
 		);
 	}
 
 	public function update_data()
 	{
 		return array(
-			array('config.update', array('version', '3.1.0-RC4')),
+			array('config.update', array('version', '3.1.9')),
 		);
 	}
 }

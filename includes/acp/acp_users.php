@@ -1809,10 +1809,11 @@ class acp_users
 			case 'avatar':
 
 				$avatars_enabled = false;
+				/** @var \phpbb\avatar\manager $phpbb_avatar_manager */
+				$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
 
 				if ($config['allow_avatar'])
 				{
-					$phpbb_avatar_manager = $phpbb_container->get('avatar.manager');
 					$avatar_drivers = $phpbb_avatar_manager->get_enabled_drivers();
 
 					// This is normalised data, without the user_ prefix
@@ -1872,6 +1873,14 @@ class acp_users
 					}
 
 					$selected_driver = $phpbb_avatar_manager->clean_driver_name($request->variable('avatar_driver', $user_row['user_avatar_type']));
+
+					// Assign min and max values before generating avatar driver html
+					$template->assign_vars(array(
+						'AVATAR_MIN_WIDTH'		=> $config['avatar_min_width'],
+						'AVATAR_MAX_WIDTH'		=> $config['avatar_max_width'],
+						'AVATAR_MIN_HEIGHT'		=> $config['avatar_min_height'],
+						'AVATAR_MAX_HEIGHT'		=> $config['avatar_max_height'],
+					));
 
 					foreach ($avatar_drivers as $current_driver)
 					{
@@ -2265,6 +2274,12 @@ class acp_users
 						{
 							trigger_error($user->lang['NO_GROUP'] . adm_back_link($this->u_action . '&amp;u=' . $user_id), E_USER_WARNING);
 						}
+
+						if (!check_link_hash($request->variable('hash', ''), 'acp_users'))
+						{
+							trigger_error($user->lang['FORM_INVALID'] . adm_back_link($this->u_action), E_USER_WARNING);
+						}
+
 						group_user_attributes($action, $group_id, $user_id);
 
 						if ($action == 'default')
@@ -2422,8 +2437,8 @@ class acp_users
 					{
 						$template->assign_block_vars('group', array(
 							'U_EDIT_GROUP'		=> append_sid("{$phpbb_admin_path}index.$phpEx", "i=groups&amp;mode=manage&amp;action=edit&amp;u=$user_id&amp;g={$data['group_id']}&amp;back_link=acp_users_groups"),
-							'U_DEFAULT'			=> $this->u_action . "&amp;action=default&amp;u=$user_id&amp;g=" . $data['group_id'],
-							'U_DEMOTE_PROMOTE'	=> $this->u_action . '&amp;action=' . (($data['group_leader']) ? 'demote' : 'promote') . "&amp;u=$user_id&amp;g=" . $data['group_id'],
+							'U_DEFAULT'			=> $this->u_action . "&amp;action=default&amp;u=$user_id&amp;g=" . $data['group_id'] . '&amp;hash=' . generate_link_hash('acp_users'),
+							'U_DEMOTE_PROMOTE'	=> $this->u_action . '&amp;action=' . (($data['group_leader']) ? 'demote' : 'promote') . "&amp;u=$user_id&amp;g=" . $data['group_id'] . '&amp;hash=' . generate_link_hash('acp_users'),
 							'U_DELETE'			=> $this->u_action . "&amp;action=delete&amp;u=$user_id&amp;g=" . $data['group_id'],
 							'U_APPROVE'			=> ($group_type == 'pending') ? $this->u_action . "&amp;action=approve&amp;u=$user_id&amp;g=" . $data['group_id'] : '',
 

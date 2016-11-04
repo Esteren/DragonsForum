@@ -186,12 +186,13 @@ class manager
 		if (!$options['count_total'] || $total_count)
 		{
 			$rowset = array();
+			$selected_unread_count = 0;
 
 			// Get the main notifications
 			$sql = 'SELECT n.*, nt.notification_type_name
 				FROM ' . $this->notifications_table . ' n, ' . $this->notification_types_table . ' nt
 				WHERE n.user_id = ' . (int) $options['user_id'] .
-					(($options['notification_id']) ? ((is_array($options['notification_id'])) ? ' AND ' . $this->db->sql_in_set('n.notification_id', $options['notification_id']) : ' AND n.notification_id = ' . (int) $options['notification_id']) : '') . '
+					(($options['notification_id']) ? ' AND ' . $this->db->sql_in_set('n.notification_id', $options['notification_id']) : '') . '
 					AND nt.notification_type_id = n.notification_type_id
 					AND nt.notification_type_enabled = 1
 				ORDER BY n.' . $this->db->sql_escape($options['order_by']) . ' ' . $this->db->sql_escape($options['order_dir']);
@@ -200,11 +201,12 @@ class manager
 			while ($row = $this->db->sql_fetchrow($result))
 			{
 				$rowset[$row['notification_id']] = $row;
+				$selected_unread_count += (int) !$row['notification_read'];
 			}
 			$this->db->sql_freeresult($result);
 
 			// Get all unread notifications
-			if ($unread_count && $options['all_unread'] && !empty($rowset))
+			if ($selected_unread_count < $unread_count && $options['all_unread'] && !empty($rowset))
 			{
 				$sql = 'SELECT n.*, nt.notification_type_name
 				FROM ' . $this->notifications_table . ' n, ' . $this->notification_types_table . ' nt
@@ -273,10 +275,9 @@ class manager
 		$sql = 'UPDATE ' . $this->notifications_table . "
 			SET notification_read = 1
 			WHERE notification_time <= " . (int) $time .
-				(($notification_type_name !== false) ? ' AND ' .
-					(is_array($notification_type_name) ? $this->db->sql_in_set('notification_type_id', $this->get_notification_type_ids($notification_type_name)) : 'notification_type_id = ' . $this->get_notification_type_id($notification_type_name)) : '') .
-				(($user_id !== false) ? ' AND ' . (is_array($user_id) ? $this->db->sql_in_set('user_id', $user_id) : 'user_id = ' . (int) $user_id) : '') .
-				(($item_id !== false) ? ' AND ' . (is_array($item_id) ? $this->db->sql_in_set('item_id', $item_id) : 'item_id = ' . (int) $item_id) : '');
+				(($notification_type_name !== false) ? ' AND ' . $this->db->sql_in_set('notification_type_id', $this->get_notification_type_ids($notification_type_name)) : '') .
+				(($user_id !== false) ? ' AND ' . $this->db->sql_in_set('user_id', $user_id) : '') .
+				(($item_id !== false) ? ' AND ' . $this->db->sql_in_set('item_id', $item_id) : '');
 		$this->db->sql_query($sql);
 	}
 
@@ -295,10 +296,9 @@ class manager
 		$sql = 'UPDATE ' . $this->notifications_table . "
 			SET notification_read = 1
 			WHERE notification_time <= " . (int) $time .
-				(($notification_type_name !== false) ? ' AND ' .
-					(is_array($notification_type_name) ? $this->db->sql_in_set('notification_type_id', $this->get_notification_type_ids($notification_type_name)) : 'notification_type_id = ' . $this->get_notification_type_id($notification_type_name)) : '') .
-				(($item_parent_id !== false) ? ' AND ' . (is_array($item_parent_id) ? $this->db->sql_in_set('item_parent_id', $item_parent_id, false, true) : 'item_parent_id = ' . (int) $item_parent_id) : '') .
-				(($user_id !== false) ? ' AND ' . (is_array($user_id) ? $this->db->sql_in_set('user_id', $user_id) : 'user_id = ' . (int) $user_id) : '');
+				(($notification_type_name !== false) ? ' AND ' . $this->db->sql_in_set('notification_type_id', $this->get_notification_type_ids($notification_type_name)) : '') .
+				(($item_parent_id !== false) ? ' AND ' . $this->db->sql_in_set('item_parent_id', $item_parent_id, false, true) : '') .
+				(($user_id !== false) ? ' AND ' . $this->db->sql_in_set('user_id', $user_id) : '');
 		$this->db->sql_query($sql);
 	}
 
@@ -315,7 +315,7 @@ class manager
 		$sql = 'UPDATE ' . $this->notifications_table . "
 			SET notification_read = 1
 			WHERE notification_time <= " . (int) $time . '
-				AND ' . ((is_array($notification_id)) ? $this->db->sql_in_set('notification_id', $notification_id) : 'notification_id = ' . (int) $notification_id);
+				AND ' . $this->db->sql_in_set('notification_id', $notification_id);
 		$this->db->sql_query($sql);
 	}
 
@@ -540,8 +540,8 @@ class manager
 
 		$sql = 'DELETE FROM ' . $this->notifications_table . '
 			WHERE notification_type_id = ' . (int) $notification_type_id . '
-				AND ' . (is_array($item_id) ? $this->db->sql_in_set('item_id', $item_id) : 'item_id = ' . (int) $item_id) .
-				(($parent_id !== false) ? ' AND ' . ((is_array($parent_id) ? $this->db->sql_in_set('item_parent_id', $parent_id) : 'item_parent_id = ' . (int) $parent_id)) : '');
+				AND ' . $this->db->sql_in_set('item_id', $item_id) .
+				(($parent_id !== false) ? ' AND ' . $this->db->sql_in_set('item_parent_id', $parent_id) : '');
 		$this->db->sql_query($sql);
 	}
 
@@ -923,6 +923,8 @@ class manager
 	{
 		$notification_type_ids = $this->cache->get('notification_type_ids');
 
+		$this->db->sql_transaction('begin');
+
 		if ($notification_type_ids === false)
 		{
 			$notification_type_ids = array();
@@ -943,6 +945,7 @@ class manager
 		{
 			if (!isset($this->notification_types[$notification_type_name]) && !isset($this->notification_types['notification.type.' . $notification_type_name]))
 			{
+				$this->db->sql_transaction('rollback');
 				throw new \phpbb\notification\exception($this->user->lang('NOTIFICATION_TYPE_NOT_EXIST', $notification_type_name));
 			}
 
@@ -957,17 +960,24 @@ class manager
 			$this->cache->put('notification_type_ids', $notification_type_ids);
 		}
 
+		$this->db->sql_transaction('commit');
+
 		return $notification_type_ids[$notification_type_name];
 	}
 
 	/**
 	* Get notification type ids (as an array)
 	*
-	* @param array $notification_type_names Array of strings
+	* @param string|array $notification_type_names Notification type names
 	* @return array Array of integers
 	*/
-	public function get_notification_type_ids(array $notification_type_names)
+	public function get_notification_type_ids($notification_type_names)
 	{
+		if (!is_array($notification_type_names))
+		{
+			$notification_type_names = array($notification_type_names);
+		}
+
 		$notification_type_ids = array();
 
 		foreach ($notification_type_names as $name)

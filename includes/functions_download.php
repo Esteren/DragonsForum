@@ -108,6 +108,7 @@ function wrap_img_in_html($src, $title)
 	echo '<html>';
 	echo '<head>';
 	echo '<meta charset="utf-8">';
+	echo '<meta http-equiv="X-UA-Compatible" content="IE=edge">';
 	echo '<title>' . $title . '</title>';
 	echo '</head>';
 	echo '<body>';
@@ -165,7 +166,7 @@ function send_file_to_browser($attachment, $upload_dir, $category)
 	}
 
 	// Make sure the database record for the filesize is correct
-	if ($size > 0 && $size != $attachment['filesize'])
+	if ($size > 0 && $size != $attachment['filesize'] && strpos($attachment['physical_filename'], 'thumb_') === false)
 	{
 		// Update database record
 		$sql = 'UPDATE ' . ATTACHMENTS_TABLE . '
@@ -283,7 +284,7 @@ function header_filename($file)
 
 	// There be dragons here.
 	// Not many follows the RFC...
-	if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Safari') !== false || strpos($user_agent, 'Konqueror') !== false)
+	if (strpos($user_agent, 'MSIE') !== false || strpos($user_agent, 'Konqueror') !== false)
 	{
 		return "filename=" . rawurlencode($file);
 	}
@@ -412,7 +413,7 @@ function set_modified_headers($stamp, $browser)
 	global $request;
 
 	// let's see if we have to send the file at all
-	$last_load 	=  $request->header('Modified-Since') ? strtotime(trim($request->header('Modified-Since'))) : false;
+	$last_load 	=  $request->header('If-Modified-Since') ? strtotime(trim($request->header('If-Modified-Since'))) : false;
 
 	if (strpos(strtolower($browser), 'msie 6.0') === false && !phpbb_is_greater_ie_version($browser, 7))
 	{
