@@ -32,6 +32,7 @@ em {
     #left-nav {
         float: none;
     }
+    #page-header .carousel .item,
     #caption_banner {
         min-height: 150px;
     }
