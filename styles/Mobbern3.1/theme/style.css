@@ -27,3 +27,12 @@ em {
     list-style-type: disc;
 }
 
+@media (max-width: 980px) {
+    #left-nav {
+        float: none;
+    }
+    #caption_banner {
+        min-height: 150px;
+    }
+}
+
