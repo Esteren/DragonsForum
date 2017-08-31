@@ -5,7 +5,8 @@ img {
 }
 
 #caption_banner {
-    background-image: url('/images/agate_Vampire.png');
+/*    background-image: url('/images/agate_Vampire.png');*/
+    background-image: url('/images/banner_dragons.jpg');
     background-size: cover;
     background-position: center center;
     width: 100%;
