@@ -4,8 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "hash": "e806724fde8e48edf85d88eabde9607b",
-    "content-hash": "2d9c1857e65554ceb4cfa435495df188",
+    "content-hash": "2e9ccf6f2f973539552cf490856e3e70",
     "packages": [
         {
             "name": "ircmaxell/password-compat",
@@ -47,7 +46,7 @@
                 "hashing",
                 "password"
             ],
-            "time": "2014-11-20 16:49:30"
+            "time": "2014-11-20T16:49:30+00:00"
         },
         {
             "name": "lusitanian/oauth",
@@ -100,7 +99,7 @@
                     "name": "Pieter Hordijk",
                     "email": "info@pieterhordijk.com",
                     "homepage": "https://pieterhordijk.com",
-                    "role": "developer"
+                    "role": "Developer"
                 }
             ],
             "description": "PHP 5.3+ oAuth 1/2 Library",
@@ -110,7 +109,7 @@
                 "oauth",
                 "security"
             ],
-            "time": "2013-12-25 20:05:42"
+            "time": "2013-12-25T20:05:42+00:00"
         },
         {
             "name": "psr/log",
@@ -148,7 +147,7 @@
                 "psr",
                 "psr-3"
             ],
-            "time": "2012-12-21 11:40:51"
+            "time": "2012-12-21T11:40:51+00:00"
         },
         {
             "name": "symfony/config",
@@ -199,7 +198,7 @@
             ],
             "description": "Symfony Config Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:12:06"
+            "time": "2016-03-04T07:12:06+00:00"
         },
         {
             "name": "symfony/console",
@@ -255,7 +254,7 @@
             ],
             "description": "Symfony Console Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 09:20:54"
+            "time": "2016-03-04T09:20:54+00:00"
         },
         {
             "name": "symfony/debug",
@@ -312,7 +311,7 @@
             ],
             "description": "Symfony Debug Component",
             "homepage": "https://symfony.com",
-            "time": "2016-01-27 05:14:19"
+            "time": "2016-01-27T05:14:19+00:00"
         },
         {
             "name": "symfony/dependency-injection",
@@ -371,7 +370,7 @@
             ],
             "description": "Symfony DependencyInjection Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-08 16:58:37"
+            "time": "2016-03-08T16:58:37+00:00"
         },
         {
             "name": "symfony/event-dispatcher",
@@ -428,7 +427,7 @@
             ],
             "description": "Symfony EventDispatcher Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:12:06"
+            "time": "2016-03-04T07:12:06+00:00"
         },
         {
             "name": "symfony/filesystem",
@@ -477,7 +476,7 @@
             ],
             "description": "Symfony Filesystem Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-22 15:02:30"
+            "time": "2016-02-22T15:02:30+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -531,7 +530,7 @@
             ],
             "description": "Symfony HttpFoundation Component",
             "homepage": "https://symfony.com",
-            "time": "2016-02-28 16:20:50"
+            "time": "2016-02-28T16:20:50+00:00"
         },
         {
             "name": "symfony/http-kernel",
@@ -607,7 +606,7 @@
             ],
             "description": "Symfony HttpKernel Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-13 16:38:02"
+            "time": "2016-03-13T16:38:02+00:00"
         },
         {
             "name": "symfony/polyfill-php54",
@@ -665,7 +664,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-01-25 19:13:00"
+            "time": "2016-01-25T19:13:00+00:00"
         },
         {
             "name": "symfony/polyfill-php55",
@@ -721,7 +720,7 @@
                 "portable",
                 "shim"
             ],
-            "time": "2016-01-20 09:13:37"
+            "time": "2016-01-20T09:13:37+00:00"
         },
         {
             "name": "symfony/routing",
@@ -783,7 +782,7 @@
             ],
             "description": "Symfony Routing Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:12:06"
+            "time": "2016-03-04T07:12:06+00:00"
         },
         {
             "name": "symfony/yaml",
@@ -833,7 +832,7 @@
             ],
             "description": "Symfony Yaml Component",
             "homepage": "https://symfony.com",
-            "time": "2016-03-04 07:12:08"
+            "time": "2016-03-04T07:12:08+00:00"
         },
         {
             "name": "twig/twig",
@@ -894,17 +893,20 @@
             "keywords": [
                 "templating"
             ],
-            "time": "2016-01-25 21:22:18"
+            "time": "2016-01-25T21:22:18+00:00"
         }
     ],
-    "packages-dev": null,
+    "packages-dev": [],
     "aliases": [],
     "minimum-stability": "stable",
     "stability-flags": [],
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": ">=5.3.3,<7.0"
+        "php": ">=5.3.3"
     },
-    "platform-dev": []
+    "platform-dev": [],
+    "platform-overrides": {
+        "php": "5.6"
+    }
 }
