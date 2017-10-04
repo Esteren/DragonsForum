@@ -6,14 +6,32 @@ img {
 
 #caption_banner {
 /*    background-image: url('/images/agate_Vampire.png');*/
-    background-image: url('/images/banner_dragons.jpg');
+    background: url('/images/agate/Vermine2047-Forest-background.jpg') center center;
     background-size: cover;
-    background-position: center center;
     width: 100%;
-    left: 0;
-    right: 0;
-    color: transparent;
-    text-align: center;
+    display: block;
+    padding: 30px 0;
+}
+
+#caption_banner .project_logo,
+#agate_logo
+{
+    min-width: 0;
+    min-height: 0;
+    width: auto;
+    height: auto;
+    margin: 0 auto;
+    position: static;
+    display: block;
+}
+
+#caption_banner .project_logo {
+    max-width: 450px;
+    margin-bottom: 30px;
+}
+
+#agate_logo {
+    max-width: 120px;
 }
 
 /** Use #phpbb to force override **/
