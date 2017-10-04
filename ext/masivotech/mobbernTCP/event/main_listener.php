@@ -86,7 +86,7 @@ class main_listener implements EventSubscriberInterface
       'MBRN_FOOTER_LN'        => $this->config['mbrn_footerLn'],
       'MBRN_FOOTER_PI'        => $this->config['mbrn_footerPi'],
       'MBRN_FOOTER_WP'        => $this->config['mbrn_footerWp'],
-      'MBRN_FOOTER_YT'        => $this->config['mbrn_footerYt'],      
+      'MBRN_FOOTER_YT'        => $this->config['mbrn_footerYt'],
 
       // Design Options Vars
       'MBRN_COLOR_PRESET'     => $this->config['mbrn_colorPreset'],
@@ -114,6 +114,9 @@ class main_listener implements EventSubscriberInterface
       'MBRN_MENU_LINK3'       => $this->config['mbrn_menuLink3'],
       'MBRN_MENU_LINKURL3'    => $this->config['mbrn_menuLinkUrl3'],
       'MBRN_MENU_LINKICON3'   => $this->config['mbrn_menuLinkIcon3'],
+      'MBRN_MENU_LINK4'       => $this->config['mbrn_menuLink4'],
+      'MBRN_MENU_LINKURL4'    => $this->config['mbrn_menuLinkUrl4'],
+      'MBRN_MENU_LINKICON4'   => $this->config['mbrn_menuLinkIcon4'],
 
       'MBRN_MENU_ICONS'       => $this->config['mbrn_menuIcons'],
       'MBRN_MENU_CIRCLES'     => $this->config['mbrn_menuCircles'],

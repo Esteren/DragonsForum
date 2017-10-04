@@ -117,12 +117,15 @@ class settings
       $this->config->set('mbrn_menuLink1',      $this->request->variable('mbrn_menuLink1',     '0'));
       $this->config->set('mbrn_menuLink2',      $this->request->variable('mbrn_menuLink2',     '0'));
       $this->config->set('mbrn_menuLink3',      $this->request->variable('mbrn_menuLink3',     '0'));
+      $this->config->set('mbrn_menuLink4',      $this->request->variable('mbrn_menuLink4',     '0'));
       $this->config->set('mbrn_menuLinkUrl1',   $this->request->variable('mbrn_menuLinkUrl1',  '0'));
       $this->config->set('mbrn_menuLinkUrl2',   $this->request->variable('mbrn_menuLinkUrl2',  '0'));
       $this->config->set('mbrn_menuLinkUrl3',   $this->request->variable('mbrn_menuLinkUrl3',  '0'));
+      $this->config->set('mbrn_menuLinkUrl4',   $this->request->variable('mbrn_menuLinkUrl4',  '0'));
       $this->config->set('mbrn_menuLinkIcon1',  $this->request->variable('mbrn_menuLinkIcon1', '0'));
       $this->config->set('mbrn_menuLinkIcon2',  $this->request->variable('mbrn_menuLinkIcon2', '0'));
       $this->config->set('mbrn_menuLinkIcon3',  $this->request->variable('mbrn_menuLinkIcon3', '0'));
+      $this->config->set('mbrn_menuLinkIcon4',  $this->request->variable('mbrn_menuLinkIcon4', '0'));
       $this->config->set('mbrn_menuIcons',      $this->request->variable('mbrn_menuIcons',     '0'));
       $this->config->set('mbrn_menuCircles',    $this->request->variable('mbrn_menuCircles',   '0'));
       $this->config->set('mbrn_menuMega',       $this->request->variable('mbrn_menuMega',      '0'));
