@@ -16,17 +16,15 @@
 
 {META}
 
-
-
 <title>
-<!-- IF UNREAD_NOTIFICATIONS_COUNT -->({UNREAD_NOTIFICATIONS_COUNT}) 
+<!-- IF UNREAD_NOTIFICATIONS_COUNT -->({UNREAD_NOTIFICATIONS_COUNT})
 <!-- ENDIF -->
 
-<!-- IF not S_VIEWTOPIC and not S_VIEWFORUM -->{SITENAME} - 
+<!-- IF not S_VIEWTOPIC and not S_VIEWFORUM -->{SITENAME} -
 <!-- ENDIF -->
 
-<!-- IF S_IN_MCP --> {L_MCP} - 
-<!-- ELSEIF S_IN_UCP --> {L_UCP} - 
+<!-- IF S_IN_MCP --> {L_MCP} -
+<!-- ELSEIF S_IN_UCP --> {L_UCP} -
 <!-- ENDIF -->
 
 {PAGE_TITLE}
@@ -130,10 +128,8 @@
 
 <link href="{T_STYLESHEET_LANG_LINK}" rel="stylesheet" type="text/css" media="screen, projection" />
 
-<link href="{T_THEME_PATH}/mobbern.css" rel="stylesheet" type="text/css" media="screen, projection" />
-<link href="{T_THEME_PATH}/mobbern-responsive.css" rel="stylesheet" type="text/css" media="only screen" />
-
-
+<link href="{T_THEME_PATH}/mobbern.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" />
+<link href="{T_THEME_PATH}/mobbern-responsive.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="only screen" />
 
 <!-- IF S_CONTENT_DIRECTION == 'rtl' -->
   <link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" />
@@ -165,7 +161,7 @@
   <!-- IF MBRN_COLOR_PRESET == "lilac" -->
   <link href="{T_THEME_PATH}/color-theme-lilac.css" rel="stylesheet" type="text/css" class="color-theme" />
   <!-- ENDIF -->
-  
+
   <!-- ELSE -->
   <link href="{T_THEME_PATH}/color-theme-azure.css" rel="stylesheet" type="text/css" class="color-theme" />
 <!-- ENDIF -->
@@ -193,8 +189,7 @@
 <!-- ENDIF -->
 
 <!-- SITE CSS : -->
-<link rel="stylesheet" href="{T_THEME_PATH}/style.css?v=1.1" type="text/css" />
-
+<link rel="stylesheet" href="{T_THEME_PATH}/style.css?assets_version={T_ASSETS_VERSION}" type="text/css" />
 
 <!-- EVENT overall_header_head_append -->
 
@@ -268,8 +263,6 @@
     <!-- INCLUDE m_ads_code_inpage_top.html -->
     </div>
   <!-- ENDIF -->
-
-  
 
   <!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
   <div id="information" class="rules">
