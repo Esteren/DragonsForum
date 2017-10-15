@@ -2269,7 +2269,8 @@ dl.details dt {
 
 /* Copyright Info */
 .copyright {
-  padding: 25px 0 15px;
+  /*padding: 25px 0 15px;*/
+  padding: 0;
   border-bottom: solid 1px rgba(255, 255, 255, 0.1);
   line-height: 36px;
 }

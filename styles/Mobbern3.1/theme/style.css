@@ -13,8 +13,16 @@ img {
     padding: 30px 0;
 }
 
-#caption_banner .project_logo,
-#agate_logo
+#agate_logo {
+    min-width: 0;
+    min-height: 0;
+    width: auto;
+    height: auto;
+    position: static;
+    float: right;
+}
+
+#caption_banner .project_logo
 {
     min-width: 0;
     min-height: 0;
