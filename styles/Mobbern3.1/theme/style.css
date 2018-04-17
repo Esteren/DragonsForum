@@ -7,7 +7,7 @@ img {
 #caption_banner {
 /*    background-image: url('/images/agate_Vampire.png');*/
 /*    background: url('/images/agate/Vermine2047-Forest-background.jpg') center center;*/
-    background: url('/images/agate/DragonsRouge_banner.jpg') center -90px no-repeat;
+    background: url('/images/agate/DragonsRouge_banner.jpg') center 20% no-repeat;
     background-size: cover;
     width: 100%;
     display: block;
