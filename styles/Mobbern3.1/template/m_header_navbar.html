@@ -171,7 +171,7 @@
         <!-- ENDIF -->
 
         <!-- IF U_ACP && MBRN_CP -->
-        <li><a href="{MBRN_CP_URL}?sid={SESSION_ID}"><i class="icon fa fa-wrench"></i>{L_MBRN_TCP}</a>
+        <li><a href="{MBRN_CP_URL}"><i class="icon fa fa-wrench"></i>{L_MBRN_TCP}</a>
         </li>
         <!-- ENDIF -->
 
@@ -200,7 +200,7 @@
       <a href="{U_LOGIN_LOGOUT}" title="{L_LOGIN_LOGOUT}" class="dropdown-toggle" data-toggle="dropdown" accesskey="x">
        <i class="icon fa fa-power-off"></i><span class="inner-text">{L_LOGIN}</span><span class="caret"></span></a>
 
-       <div class="dropdown-menu" role="login">
+       <div class="dropdown-menu" >
 
        <!-- LOGIN-BOX -->
 
@@ -209,18 +209,21 @@
          <form action="{S_LOGIN_ACTION}" method="post" id="login">
          <fieldset>
            <dl>
+             <dt></dt>
              <dd class="text-center">
-             <input type="text" tabindex="1" name="username" id="username" size="25" placeholder="{L_USERNAME}" class="inputbox autowidth add-border" title="{L_USERNAME}" />
+             <input type="text" tabindex="1" name="username" id="box_username" size="25" placeholder="{L_USERNAME}" class="inputbox autowidth add-border" title="{L_USERNAME}" />
              </dd>
            </dl>
 
            <dl>
+             <dt></dt>
              <dd class="text-center">
-             <input type="password" tabindex="2" name="password" id="password" size="25" placeholder="{L_PASSWORD}" class="inputbox autowidth add-border" title="{L_PASSWORD}" />
+             <input type="password" tabindex="2" name="password" id="box_password" size="25" placeholder="{L_PASSWORD}" class="inputbox autowidth add-border" title="{L_PASSWORD}" />
              </dd>
            </dl>
 
            <dl>
+            <dt></dt>
             <dd class="float-left"><a href="{U_SEND_PASSWORD}">{L_FORGOT_PASS}</a></dd>
 
              <!-- IF S_AUTOLOGIN_ENABLED -->
@@ -237,6 +240,7 @@
            {S_LOGIN_REDIRECT}
 
            <dl>
+             <dt></dt>
              <dd class="button-container">
              <!-- IF S_AUTOLOGIN_ENABLED -->
              <label for="autologin" class="float-right"><input type="checkbox" name="autologin" id="autologin" tabindex="4" /> {L_LOG_ME_IN}</label>

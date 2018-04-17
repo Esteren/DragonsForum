@@ -17,7 +17,7 @@ time, mark, audio, video {
 	padding: 0;
 	border: 0;
 	font-size: 100%;
-/*	font: inherit;*/
+	font: inherit;
 	vertical-align: baseline;
 }
 /* HTML5 display-role reset for older browsers */
@@ -352,7 +352,7 @@ ul.linklist.bulletin > li.no-bulletin:before {
 }
 
 .breadcrumbs .crumb:before {
-	content: '‹';
+	content: '\2039';
 	font-weight: bold;
 	padding: 0 0.5em;
 }

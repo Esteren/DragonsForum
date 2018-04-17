@@ -1,5 +1,6 @@
 
   <div class="footer-opts">
+
     <ul class="linklist">
 
         <!-- IF not S_IS_BOT -->
@@ -57,7 +58,7 @@
 
   <!-- IF MBRN_ADS_INPAGE -->
     <div class="inpage-adspace adspace">
-    <!-- INCLUDE m_ads_code_inpage_bottom.html -->  
+    <!-- INCLUDE m_ads_code_inpage_bottom.html -->
     </div>
   <!-- ENDIF -->
 
@@ -159,9 +160,9 @@
 <!-- CUSTOM JS -->
 <script>
 $(document).ready(function(){
-<!-- IF MBRN_SCROLL_CUSTOM == null || MBRN_SCROLL_CUSTOM -->
+<!-- IF MBRN_SCROLL_CUSTOM -->
 
-  // jQuery Nicescroll 
+  // jQuery Nicescroll
   if( jQuery().niceScroll ) {
     var params = { <!-- IF not MBRN_SCROLL_SMOOTH && MBRN_SCROLL_SMOOTH != null -->scrollspeed:2000,mousescrollstep:8*4,smoothscroll:false <!-- ENDIF --> };
     $("html").niceScroll(params);
@@ -177,6 +178,8 @@ $(document).ready(function(){
 
 <!-- IF S_PLUPLOAD --><!-- INCLUDE plupload.html --><!-- ENDIF -->
 {$SCRIPTS}
+
+<!-- EVENT overall_footer_body_after -->
 
 </body>
 </html>

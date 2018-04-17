@@ -10,13 +10,13 @@
   <!-- EVENT viewtopic_topic_title_append -->
 
   <!-- IF FORUM_DESC -->
-  <div class="subheader">{FORUM_DESC}<br /></div>
+  <span class="subheader">{FORUM_DESC}<br /></span>
   <!-- ENDIF -->
 
   <!-- IF MODERATORS -->
-  <div class="subheader">
+  <span class="subheader">
   <!-- IF S_SINGLE_MODERATOR -->{L_MODERATOR}<!-- ELSE -->{L_MODERATORS}<!-- ENDIF -->{L_COLON} {MODERATORS}
-  </div>
+  </span>
   <!-- ENDIF -->
 </h2>
 
@@ -179,9 +179,14 @@
 
           <!-- EVENT viewtopic_body_avatar_after -->
 
+          <!-- EVENT viewtopic_body_post_author_before -->
+
         </div>
 
         <!-- IF not postrow.U_POST_AUTHOR --><strong>{postrow.POST_AUTHOR_FULL}</strong><!-- ELSE -->{postrow.POST_AUTHOR_FULL}<!-- ENDIF -->
+
+        <!-- EVENT viewtopic_body_post_author_after -->
+
       </dt>
 
       <!-- IF postrow.RANK_TITLE or postrow.RANK_IMG -->
@@ -387,7 +392,7 @@
 
 
     <div class="back2top">
-      <a href="#wrap" class="top scroll-link" title="{L_BACK_TO_TOP}">
+      <a href="#top" class="top scroll-link" title="{L_BACK_TO_TOP}">
       <i class="fa fa-arrow-circle-up"></i></a>
     </div>
 

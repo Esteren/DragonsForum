@@ -5,88 +5,94 @@
  <!-- Widgets: -->
 
   <!-- IF MBRN_W_AD -->
-	<!-- Sidebar Block: Special/Ad Widget -->
-	<div class="widget-ad sidebar-block panel panel-success">
-	  <div class="panel-heading">
-	    <h4>{MBRN_W_AD_TITLE}</h4>
-	  </div>
-  	  <div class="panel-body no-padding">
-  	  <a href="{MBRN_W_AD_URL}" title="{MBRN_W_AD_TITLE}">
-  	  <img class="align-h-center" src="{MBRN_W_AD_IMG}" alt="{MBRN_W_AD_TITLE}" />
-  	  </a>
-	  </div>
-	</div><!-- /.sidebar-block -->
-	<!-- ENDIF -->
+  <!-- Sidebar Block: Special/Ad Widget -->
+  <div class="widget-ad sidebar-block panel panel-success">
+    <div class="panel-heading">
+      <h4>{MBRN_W_AD_TITLE}</h4>
+    </div>
+      <div class="panel-body no-padding">
+      <a href="{MBRN_W_AD_URL}" title="{MBRN_W_AD_TITLE}">
+      <!-- IF not MBRN_W_AD_IMG -->
+      <img class="align-h-center" src="{T_THEME_PATH}/images/sidebar_ad.png" alt="{MBRN_W_AD_TITLE}" />
+      <!-- ELSE -->
+      <img class="align-h-center" src="{MBRN_W_AD_IMG}" alt="{MBRN_W_AD_TITLE}" />
+      <!-- ENDIF -->
+      </a>
+    </div>
+  </div><!-- /.sidebar-block -->
+  <!-- ENDIF -->
 
-	<!-- IF MBRN_W_NOTE -->
-	<!-- Sidebar Block: Notification Widget -->
-	<div class="widget-note sidebar-block panel panel-secondary">
-	  <div class="panel-heading">
-	    <h4><a href="{MBRN_W_NOTE_URL}" title="{MBRN_W_NOTE_MSG}"><i class="icon fa fa-info-circle"></i>{MBRN_W_NOTE_MSG}</a></h4>
-	  </div>
-	</div><!-- /.sidebar-block -->
-	<!-- ENDIF -->
+  <!-- IF MBRN_W_NOTE -->
+  <!-- Sidebar Block: Notification Widget -->
+  <div class="widget-note sidebar-block panel panel-secondary">
+    <div class="panel-heading">
+      <h4><a href="{MBRN_W_NOTE_URL}" title="{MBRN_W_NOTE_MSG}"><i class="icon fa fa-info-circle"></i>{MBRN_W_NOTE_MSG}</a></h4>
+    </div>
+  </div><!-- /.sidebar-block -->
+  <!-- ENDIF -->
 
-	<!-- IF MBRN_W_COL -->
-	<!-- Sidebar Block: Collapsible Widget -->
-	<div class="widget-collapsible sidebar-block panel panel-default">
-	  <div class="panel-heading">
-	    <h4>
-	    <i class="collapse-button icon fa fa-chevron-circle-up float-right" data-toggle="collapse" data-target="#ColWidget" title="Toggle Panel"></i>{MBRN_W_COL_TITLE}</h4>
-	  </div>
-	  <div id="ColWidget" class="panel-body collapse in no-padding">  
-	    <div class="panel-body">
-	    {MBRN_W_COL_TXT}
-   	  </div>
-	  </div>
-	</div><!-- /.sidebar-block -->
-	<!-- ENDIF -->
+  <!-- IF MBRN_W_COL -->
+  <!-- Sidebar Block: Collapsible Widget -->
+  <div class="widget-collapsible sidebar-block panel panel-default">
+    <div class="panel-heading">
+      <h4>
+      <i class="collapse-button icon fa fa-chevron-circle-up float-right" data-toggle="collapse" data-target="#ColWidget" title="Toggle Panel"></i>{MBRN_W_COL_TITLE}</h4>
+    </div>
+    <div id="ColWidget" class="panel-body collapse in no-padding">  
+      <div class="panel-body">
+      {MBRN_W_COL_TXT}
+      </div>
+    </div>
+  </div><!-- /.sidebar-block -->
+  <!-- ENDIF -->
 
-	<!-- IF MBRN_W_TABS -->
+  <!-- IF MBRN_W_TABS -->
   <!-- Sidebar Block: Tabs Widget -->
-	<div class="widget-tabs sidebar-block panel tabs-panel">
-	<!-- Nav tabs -->
-	<ul class="nav nav-tabs" role="tablist">
-	  <li class="active"><a href="#tab-1" role="tab" data-toggle="tab"><i class="fa fa-home"></i> Home</a></li>
-	  <li><a href="#tab-2" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Profile</a></li>
-	</ul>
+  <div class="widget-tabs sidebar-block panel tabs-panel">
+  <!-- Nav tabs -->
+  <ul class="nav nav-tabs" role="tablist">
+    <li class="active"><a href="#tab-1" role="tab" data-toggle="tab"><i class="fa fa-home"></i> Home</a></li>
+    <li><a href="#tab-2" role="tab" data-toggle="tab"><i class="fa fa-user"></i> Profile</a></li>
+  </ul>
 
-	<!-- Tab panes -->
-	<div class="tab-content">
-	  <div class="tab-pane fade in active" id="tab-1">
-		<strong>Example of tabbed content</strong>
-		<p>Click tabs to swap between content that is broken into logical sections.<br />
-		<a href="#">Link example</a>
-		</p>
-	  </div>
-	  <div class="tab-pane fade" id="tab-2">
-		<strong>Secondary tab</strong>
-		<p>Bespoke american apparel, future art party Williamsburg kitsch rights polaroid.<br /><br />Hashtag synth gentrify, blog mustache hoodie church-key try hard fanny pack.
-		</p>
-	  </div>
-	</div>
-	</div><!-- /.sidebar-block -->
-	<!-- ENDIF -->
+  <!-- Tab panes -->
+  <div class="tab-content">
+    <div class="tab-pane fade in active" id="tab-1">
+    <strong>Example of tabbed content</strong>
+    <p>Click tabs to swap between content that is broken into logical sections.<br />
+    <a href="#">Link example</a>
+    </p>
+    </div>
+    <div class="tab-pane fade" id="tab-2">
+    <strong>Secondary tab</strong>
+    <p>Bespoke american apparel, future art party Williamsburg kitsch rights polaroid.<br /><br />Hashtag synth gentrify, blog mustache hoodie church-key try hard fanny pack.
+    </p>
+    </div>
+  </div>
+  </div><!-- /.sidebar-block -->
+  <!-- ENDIF -->
 
-	<!-- IF MBRN_W_TXT -->
-	<!-- Sidebar Block: Standard Text Widget -->
-	<div class="widget-text sidebar-block panel panel-default">
-	  <div class="panel-heading">
-	    <h4>{MBRN_W_TXT_TITLE}</h4>
-	  </div>
+  <!-- IF MBRN_W_TXT -->
+  <!-- Sidebar Block: Standard Text Widget -->
+  <div class="widget-text sidebar-block panel panel-default">
+    <div class="panel-heading">
+      <h4>{MBRN_W_TXT_TITLE}</h4>
+    </div>
     <div class="panel-body">
     <pre>{MBRN_W_TXT_TXT}</pre>
- 	  </div>
-	</div><!-- /.sidebar-block -->
-	<!-- ENDIF -->
+    </div>
+  </div><!-- /.sidebar-block -->
+  <!-- ENDIF -->
 
 
  <!-- SITE WIDGETS: -->
  <!-- IF not MBRN_CP -->
  <div class="panel panel-warning">
-	 <div class="panel-body">
-	 Please <a href="http://www.masivotech.com/docs/phpbb3/mobbern/">Consult the Documentation</a> <span class="hidden"> or install the Theme Control Panel</span> to add widgets to the sidebar.
-	 </div>
+   <div class="panel-body">
+   <a class="strong" href="http://www.masivotech.com/docs/phpbb3/mobbern/#doc_tcp_31">Install the Theme Control Panel</a> to get the default widgets configuration, as shown in the <a href="http://www.masivotech.com/themes/#mobbern31_phpbb">Theme Preview</a>.<br><br>
+
+   Please <a href="http://www.masivotech.com/docs/phpbb3/mobbern/#doc_sidebar">Consult the Documentation</a> to manually add widgets to the sidebar. 
+   </div>
  </div>
  <!-- ENDIF -->
  <!-- /Widgets -->

@@ -32,14 +32,14 @@ html, #page-footer, #simple-wrap .copyright
   { background-color: #314078; }
 
 .footer-contact-social a .icon
-  { color: #0d4263; }
+  { color: #314078; }
 
 /* text-color-footer */
-#page-footer, .footer-links-list a, #simple-wrap .copyright, .copyright a
-  { color: #91a5ae; }
+#page-footer, .footer-links-list a, #simple-wrap .copyright, .copyright a 
+ { color: #9BA4C4; }
 
 .footer-contact-social a .icon
-  { background-color: #91a5ae; }
+  { background-color: #9BA4C4; }
 
 
 
@@ -86,7 +86,7 @@ a:hover, a:active, a.forumtitle:hover, a.forumtitle:active, a.topictitle:hover, 
 
 
 /* $secondary-color: ; */
-a.button1, .panel-secondary .panel-heading
+a.button1, .panel-secondary .panel-heading, input.button-secondary, a.button-secondary
   { background-color: #09BC55; }
 
 .footer-contact-options .icon, .footer-contact-options a .icon

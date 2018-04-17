@@ -9,6 +9,7 @@
 
 		<p>{L_FIND_USERNAME_EXPLAIN}</p>
 
+		<!-- EVENT memberlist_search_fields_before -->
 
 		<div class="search-fields">
 		<fieldset class="fields1 column1">
@@ -52,6 +53,8 @@
 			<dd><select name="search_group_id" id="search_group_id">{S_GROUP_SELECT}</select></dd>
 		</dl>
 
+		<!-- EVENT memberlist_search_sorting_options_before -->
+
 		<dl>
 			<dt><label for="sk" class="label3">{L_SORT_BY}{L_COLON}</label></dt>
 			<dd><select name="sk" id="sk">{S_SORT_OPTIONS}</select> <select name="sd">{S_ORDER_SELECT}</select></dd>
@@ -84,7 +87,10 @@
 		</dl>
 		<!-- ENDIF -->
 
+		<!-- EVENT memberlist_search_fields_after -->
+
 		</fieldset>
+		
 		<div class="float-clear"></div>
 
 		</div><!-- /.search-fields -->

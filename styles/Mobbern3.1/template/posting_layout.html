@@ -2,9 +2,9 @@
 
 
 <!-- IF TOPIC_TITLE -->
-	<h2 class="posting-title"><a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
-	<!-- ELSE -->
-	<h2 class="posting-title"><a href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
+  <h2 class="posting-title"><a href="{U_VIEW_TOPIC}">{TOPIC_TITLE}</a></h2>
+  <!-- ELSE -->
+  <h2 class="posting-title"><a href="{U_VIEW_FORUM}">{FORUM_NAME}</a></h2>
  <!-- ENDIF -->
 
 <!-- IF S_FORUM_RULES -->
@@ -34,14 +34,14 @@
 <form id="postform" method="post" action="{S_POST_ACTION}"{S_FORM_ENCTYPE}>
 
 <!-- IF S_DRAFT_LOADED -->
-	<div class="panel">
-		<div class="inner">
-		
-		<h3>{L_INFORMATION}</h3>
-		<p>{L_DRAFT_LOADED}</p>
-		
-		</div>
-	</div>
+  <div class="panel">
+    <div class="inner">
+    
+    <h3>{L_INFORMATION}</h3>
+    <p>{L_DRAFT_LOADED}</p>
+    
+    </div>
+  </div>
 <!-- ENDIF -->
 
 
@@ -51,22 +51,22 @@
 
 
 <!-- IF S_UNGLOBALISE -->
-	<div class="panel bg3 panel-posting-unglobalize">
-		<fieldset class="fields1">
-			<h2>{L_SELECT_DESTINATION_FORUM}</h2>
-			<p>{L_UNGLOBALISE_EXPLAIN}</p>
-			<dl>
-				<dt><label for="to_forum_id">{L_MOVE}{L_COLON}</label></dt>
-				<dd><select id="to_forum_id" name="to_forum_id">{S_FORUM_SELECT}</select></dd>
-			</dl>
-			
-			<dl>
-				<dt>&nbsp;</dt>
-				<dd><input class="button1" type="submit" name="post" value="{L_CONFIRM}" /> <input class="button2" type="submit" name="cancel_unglobalise" value="{L_CANCEL}" /></dd>
-			</dl>
-		</fieldset>
+  <div class="panel bg3 panel-posting-unglobalize">
+    <fieldset class="fields1">
+      <h2>{L_SELECT_DESTINATION_FORUM}</h2>
+      <p>{L_UNGLOBALISE_EXPLAIN}</p>
+      <dl>
+        <dt><label for="to_forum_id">{L_MOVE}{L_COLON}</label></dt>
+        <dd><select id="to_forum_id" name="to_forum_id">{S_FORUM_SELECT}</select></dd>
+      </dl>
+      
+      <dl>
+        <dt>&nbsp;</dt>
+        <dd><input class="button1" type="submit" name="post" value="{L_CONFIRM}" /> <input class="button2" type="submit" name="cancel_unglobalise" value="{L_CANCEL}" /></dd>
+      </dl>
+    </fieldset>
 
-	</div><!-- /.panel-posting-unglobalize -->
+  </div><!-- /.panel-posting-unglobalize -->
 <!-- ENDIF -->
 
 
@@ -74,23 +74,24 @@
 
 
 <div class="panel panel-default panel-posting-editor" id="postingbox">
-	<div class="panel-heading">
-	<h3>{L_POST_A}</h3>
-	</div>
+  <div class="panel-heading">
+  <h3>{L_POST_A}</h3>
+  </div>
 
-	<div class="panel-body">
-	<!-- DEFINE $EXTRA_POSTING_OPTIONS = 1 -->
-	<!-- INCLUDE posting_editor.html -->
-	<input type="hidden" name="show_panel" value="options-panel" />
-	{S_FORM_TOKEN}
+  <div class="panel-body">
+  <!-- DEFINE $EXTRA_POSTING_OPTIONS = 1 -->
+  <!-- INCLUDE posting_editor.html -->
+  <input type="hidden" name="show_panel" value="options-panel" />
+  {S_FORM_TOKEN}
 
-	<!-- IF S_SHOW_ATTACH_BOX --><!-- INCLUDE posting_attach_body.html --><!-- ENDIF -->
+  <!-- IF S_SHOW_ATTACH_BOX --><!-- INCLUDE posting_attach_body.html --><!-- ENDIF -->
 
-	<!-- IF S_SHOW_POLL_BOX or S_POLL_DELETE --><!-- INCLUDE posting_poll_body.html --><!-- ENDIF -->
+  <!-- IF S_SHOW_POLL_BOX or S_POLL_DELETE --><!-- INCLUDE posting_poll_body.html --><!-- ENDIF -->
 
-	<!-- IF S_DISPLAY_REVIEW --><!-- INCLUDE posting_topic_review.html --><!-- ENDIF -->
+  <!-- IF S_DISPLAY_REVIEW --><!-- INCLUDE posting_topic_review.html --><!-- ENDIF -->
 
 </div><!-- /.panel-posting-editor -->
+
 
 
 </form>

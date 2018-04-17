@@ -105,8 +105,6 @@ dd select { width: auto; }
 dd textarea { width: 85%; }
 
 /* Hover effects */
-fieldset dl:hover dt label { color: #000000; }
-fieldset.fields2 dl:hover dt label { color: inherit; }
 #timezone { width: 95%; }
 * html #timezone { width: 50%; }
 
@@ -159,7 +157,13 @@ fieldset.quickmod { text-align: right; }
 /* Posting page styles
 ---------------------------------------- */
 /* Buttons used in the editor */
-#format-buttons { margin: 15px 0 2px 0; }
+#format-buttons {
+  margin: 15px 0 2px 0;
+  padding: 1px;
+}
+
+.panel-postingpm-editor { margin: 0; }
+
 #format-buttons input, #format-buttons select { vertical-align: middle; }
 
 /* Main message box */

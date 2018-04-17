@@ -95,6 +95,7 @@
 						<!-- ELSEIF forumrow.U_UNAPPROVED_POSTS -->
 							<a href="{forumrow.U_UNAPPROVED_POSTS}"><i class="fa fa-exclamation-triangle text-warning"></i></a>
 						<!-- ENDIF -->
+
 						<!-- IF forumrow.LAST_POST_TIME --><dfn>{L_LAST_POST}</dfn>
 						
 						<!-- IF forumrow.S_DISPLAY_SUBJECT -->
@@ -104,16 +105,25 @@
 						{L_POST_BY_AUTHOR} {forumrow.LAST_POSTER_FULL}
 							<!-- IF not S_IS_BOT -->
 							<a href="{forumrow.U_LAST_POST}"><i class="icon fa fa-external-link-square"></i></a>
-						<!-- ENDIF --><br />{forumrow.LAST_POST_TIME}
-						<!-- ELSE -->{L_NO_POSTS}&nbsp;<!-- ENDIF -->
+							<!-- ENDIF -->
+							<br />{forumrow.LAST_POST_TIME}
+						<!-- ELSE -->
+							{L_NO_POSTS}&nbsp;
+						<!-- ENDIF -->
+
 					 </span>
 					</dd>
+				<!-- ELSE -->
+					<dd>&nbsp;</dd>
 				<!-- ENDIF -->
 			</dl>
+
 			<!-- EVENT forumlist_body_forum_row_append -->
+
 		</li><!-- /.row -->
 
 		<!-- EVENT forumlist_body_forum_row_after -->
+
 	<!-- ENDIF -->
 
 
@@ -121,7 +131,9 @@
 			</ul>
 
 		</div>
+
 	<!-- EVENT forumlist_body_last_row_after -->
+
 	<!-- ENDIF -->
 
 

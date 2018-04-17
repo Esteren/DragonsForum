@@ -16,6 +16,8 @@
 
 {META}
 
+
+
 <title>
 <!-- IF UNREAD_NOTIFICATIONS_COUNT -->({UNREAD_NOTIFICATIONS_COUNT})
 <!-- ENDIF -->
@@ -131,6 +133,8 @@
 <link href="{T_THEME_PATH}/mobbern.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" />
 <link href="{T_THEME_PATH}/mobbern-responsive.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="only screen" />
 
+
+
 <!-- IF S_CONTENT_DIRECTION == 'rtl' -->
   <link href="{T_THEME_PATH}/bidi.css?assets_version={T_ASSETS_VERSION}" rel="stylesheet" type="text/css" media="screen, projection" />
 <!-- ENDIF -->
@@ -188,14 +192,14 @@
   <!-- END: CSS RULES -->
 <!-- ENDIF -->
 
-<!-- SITE CSS : -->
-<link rel="stylesheet" href="{T_THEME_PATH}/style.css?assets_version={T_ASSETS_VERSION}" type="text/css" />
-
 <!-- EVENT overall_header_head_append -->
 
 {$STYLESHEETS}
 
 <!-- EVENT overall_header_stylesheets_after -->
+
+<!-- SITE CSS : -->
+<link rel="stylesheet" href="{T_THEME_PATH}/style.css?assets_version={T_ASSETS_VERSION}" type="text/css" />
 
 </head>
 
@@ -263,6 +267,8 @@
     <!-- INCLUDE m_ads_code_inpage_top.html -->
     </div>
   <!-- ENDIF -->
+
+
 
   <!-- IF S_BOARD_DISABLED and S_USER_LOGGED_IN and (U_MCP or U_ACP) -->
   <div id="information" class="rules">
