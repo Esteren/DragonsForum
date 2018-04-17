@@ -6,7 +6,8 @@ img {
 
 #caption_banner {
 /*    background-image: url('/images/agate_Vampire.png');*/
-    background: url('/images/agate/Vermine2047-Forest-background.jpg') center center;
+/*    background: url('/images/agate/Vermine2047-Forest-background.jpg') center center;*/
+    background: url('/images/agate/DragonsRouge_banner.jpg') center -90px no-repeat;
     background-size: cover;
     width: 100%;
     display: block;
@@ -25,7 +26,7 @@ img {
 #caption_banner .project_logo
 {
     min-width: 0;
-    min-height: 0;
+    min-height: 168px;
     width: auto;
     height: auto;
     margin: 0 auto;
