@@ -521,6 +521,9 @@ a.top {
   display: block;
   margin-left: -1px;
 }
+form .postbody {
+  float: none;
+}
 .postbody-container {
   display: block;
   margin-bottom: 40px; /* space for profile-icons */
