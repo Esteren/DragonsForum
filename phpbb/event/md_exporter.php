@@ -143,11 +143,19 @@ class md_exporter
 
 			list($event_name, $details) = explode("\n===\n", $event, 2);
 			$this->validate_event_name($event_name);
+			$sorted_events = [$this->current_event, $event_name];
+			natsort($sorted_events);
 			$this->current_event = $event_name;
 
 			if (isset($this->events[$this->current_event]))
 			{
 				throw new \LogicException("The event '{$this->current_event}' is defined multiple times");
+			}
+
+			// Use array_values() to get actual first element and check against natural order
+			if (array_values($sorted_events)[0] === $event_name)
+			{
+				throw new \LogicException("The event '{$sorted_events[1]}' should be defined before '{$sorted_events[0]}'");
 			}
 
 			if (($this->filter == 'adm' && strpos($this->current_event, 'acp_') !== 0)
@@ -439,16 +447,9 @@ class md_exporter
 		$event_list = array();
 		$file_content = file_get_contents($this->path . $file);
 
-		$events = explode('<!-- EVENT ', $file_content);
-		// Remove the code before the first event
-		array_shift($events);
-		foreach ($events as $event)
-		{
-			$event = explode(' -->', $event, 2);
-			$event_list[] = array_shift($event);
-		}
+		preg_match_all('/(?:{%|<!--) EVENT (.*) (?:%}|-->)/U', $file_content, $event_list);
 
-		return $event_list;
+		return $event_list[1];
 	}
 
 	/**

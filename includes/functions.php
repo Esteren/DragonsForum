@@ -66,29 +66,48 @@ function set_var(&$result, $var, $type, $multibyte = false)
 /**
 * Generates an alphanumeric random string of given length
 *
+* @param int $num_chars Length of random string, defaults to 8.
+* This number should be less or equal than 64.
+*
 * @return string
 */
 function gen_rand_string($num_chars = 8)
 {
-	// [a, z] + [0, 9] = 36
-	return substr(strtoupper(base_convert(unique_id(), 16, 36)), 0, $num_chars);
+	$range = array_merge(range('A', 'Z'), range(0, 9));
+	$size = count($range);
+
+	$output = '';
+	for ($i = 0; $i < $num_chars; $i++)
+	{
+		$rand = random_int(0, $size-1);
+		$output .= $range[$rand];
+	}
+
+	return $output;
 }
 
 /**
 * Generates a user-friendly alphanumeric random string of given length
 * We remove 0 and O so users cannot confuse those in passwords etc.
 *
+* @param int $num_chars Length of random string, defaults to 8.
+* This number should be less or equal than 64.
+*
 * @return string
 */
 function gen_rand_string_friendly($num_chars = 8)
 {
-	$rand_str = unique_id();
+	$range = array_merge(range('A', 'N'), range('P', 'Z'), range(1, 9));
+	$size = count($range);
 
-	// Remove Z and Y from the base_convert(), replace 0 with Z and O with Y
-	// [a, z] + [0, 9] - {z, y} = [a, z] + [0, 9] - {0, o} = 34
-	$rand_str = str_replace(array('0', 'O'), array('Z', 'Y'), strtoupper(base_convert($rand_str, 16, 34)));
+	$output = '';
+	for ($i = 0; $i < $num_chars; $i++)
+	{
+		$rand = random_int(0, $size-1);
+		$output .= $range[$rand];
+	}
 
-	return substr($rand_str, 0, $num_chars);
+	return $output;
 }
 
 /**
@@ -96,7 +115,7 @@ function gen_rand_string_friendly($num_chars = 8)
 */
 function unique_id()
 {
-	return bin2hex(random_bytes(8));
+	return strtolower(gen_rand_string(16));
 }
 
 /**
@@ -661,8 +680,6 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 				}
 			}
 		}
-
-		return;
 	}
 	else if ($mode == 'topics')
 	{
@@ -789,8 +806,6 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 
 			unset($tracking);
 		}
-
-		return;
 	}
 	else if ($mode == 'topic')
 	{
@@ -904,8 +919,6 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 			$user->set_cookie('track', tracking_serialize($tracking), $post_time + 31536000);
 			$request->overwrite($config['cookie_name'] . '_track', tracking_serialize($tracking), \phpbb\request\request_interface::COOKIE);
 		}
-
-		return;
 	}
 	else if ($mode == 'post')
 	{
@@ -930,9 +943,28 @@ function markread($mode, $forum_id = false, $topic_id = false, $post_time = 0, $
 
 			$db->sql_return_on_error(false);
 		}
-
-		return;
 	}
+
+	/**
+	 * This event is used for performing actions directly after forums,
+	 * topics or posts have been marked as read.
+	 *
+	 * @event core.markread_after
+	 * @var	string		mode				Variable containing marking mode value
+	 * @var	mixed		forum_id			Variable containing forum id, or false
+	 * @var	mixed		topic_id			Variable containing topic id, or false
+	 * @var	int			post_time			Variable containing post time
+	 * @var	int			user_id				Variable containing the user id
+	 * @since 3.2.6-RC1
+	 */
+	$vars = array(
+		'mode',
+		'forum_id',
+		'topic_id',
+		'post_time',
+		'user_id',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.markread_after', compact($vars)));
 }
 
 /**
@@ -1725,14 +1757,14 @@ function redirect($url, $return = false, $disable_cd_check = false)
 	if ($url_parts === false)
 	{
 		// Malformed url
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 	else if (!empty($url_parts['scheme']) && !empty($url_parts['host']))
 	{
 		// Attention: only able to redirect within the same domain if $disable_cd_check is false (yourdomain.com -> www.yourdomain.com will not work)
 		if (!$disable_cd_check && $url_parts['host'] !== $user->host)
 		{
-			trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+			trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 		}
 	}
 	else if ($url[0] == '/')
@@ -1772,13 +1804,13 @@ function redirect($url, $return = false, $disable_cd_check = false)
 
 	if (!$disable_cd_check && strpos($url, generate_board_url(true) . '/') !== 0)
 	{
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 
 	// Make sure no linebreaks are there... to prevent http response splitting for PHP < 4.4.2
 	if (strpos(urldecode($url), "\n") !== false || strpos(urldecode($url), "\r") !== false || strpos($url, ';') !== false)
 	{
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 
 	// Now, also check the protocol and for a valid url the last time...
@@ -1787,7 +1819,7 @@ function redirect($url, $return = false, $disable_cd_check = false)
 
 	if ($url_parts === false || empty($url_parts['scheme']) || !in_array($url_parts['scheme'], $allowed_protocols))
 	{
-		trigger_error('INSECURE_REDIRECT', E_USER_ERROR);
+		trigger_error('INSECURE_REDIRECT', E_USER_WARNING);
 	}
 
 	/**
@@ -2111,25 +2143,29 @@ function check_form_key($form_name, $timespan = false)
 /**
 * Build Confirm box
 * @param boolean $check True for checking if confirmed (without any additional parameters) and false for displaying the confirm box
-* @param string $title Title/Message used for confirm box.
+* @param string|array $title Title/Message used for confirm box.
 *		message text is _CONFIRM appended to title.
 *		If title cannot be found in user->lang a default one is displayed
 *		If title_CONFIRM cannot be found in user->lang the text given is used.
+*       If title is an array, the first array value is used as explained per above,
+*       all other array values are sent as parameters to the language function.
 * @param string $hidden Hidden variables
 * @param string $html_body Template used for confirm box
 * @param string $u_action Custom form action
+*
+* @return bool True if confirmation was successful, false if not
 */
 function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_body.html', $u_action = '')
 {
 	global $user, $template, $db, $request;
-	global $config, $phpbb_path_helper;
+	global $config, $language, $phpbb_path_helper;
 
 	if (isset($_POST['cancel']))
 	{
 		return false;
 	}
 
-	$confirm = ($user->lang['YES'] === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
+	$confirm = ($language->lang('YES') === $request->variable('confirm', '', true, \phpbb\request\request_interface::POST));
 
 	if ($check && $confirm)
 	{
@@ -2163,13 +2199,27 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	// generate activation key
 	$confirm_key = gen_rand_string(10);
 
-	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+	// generate language strings
+	if (is_array($title))
 	{
-		adm_page_header((!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title]);
+		$key = array_shift($title);
+		$count = array_shift($title);
+		$confirm_title =  $language->is_set($key) ? $language->lang($key, $count, $title) : $language->lang('CONFIRM');
+		$confirm_text = $language->is_set($key . '_CONFIRM') ? $language->lang($key . '_CONFIRM', $count, $title) : $key;
 	}
 	else
 	{
-		page_header((!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title]);
+		$confirm_title = $language->is_set($title) ? $language->lang($title) : $language->lang('CONFIRM');
+		$confirm_text = $language->is_set($title . '_CONFIRM') ? $language->lang($title . '_CONFIRM') : $title;
+	}
+
+	if (defined('IN_ADMIN') && isset($user->data['session_admin']) && $user->data['session_admin'])
+	{
+		adm_page_header($confirm_title);
+	}
+	else
+	{
+		page_header($confirm_title);
 	}
 
 	$template->set_filenames(array(
@@ -2189,10 +2239,10 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	$u_action .= ((strpos($u_action, '?') === false) ? '?' : '&amp;') . 'confirm_key=' . $confirm_key;
 
 	$template->assign_vars(array(
-		'MESSAGE_TITLE'		=> (!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang($title, 1),
-		'MESSAGE_TEXT'		=> (!isset($user->lang[$title . '_CONFIRM'])) ? $title : $user->lang[$title . '_CONFIRM'],
+		'MESSAGE_TITLE'		=> $confirm_title,
+		'MESSAGE_TEXT'		=> $confirm_text,
 
-		'YES_VALUE'			=> $user->lang['YES'],
+		'YES_VALUE'			=> $language->lang('YES'),
 		'S_CONFIRM_ACTION'	=> $u_action,
 		'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields,
 		'S_AJAX_REQUEST'	=> $request->is_ajax(),
@@ -2208,10 +2258,10 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 		$json_response = new \phpbb\json_response;
 		$json_response->send(array(
 			'MESSAGE_BODY'		=> $template->assign_display('body'),
-			'MESSAGE_TITLE'		=> (!isset($user->lang[$title])) ? $user->lang['CONFIRM'] : $user->lang[$title],
-			'MESSAGE_TEXT'		=> (!isset($user->lang[$title . '_CONFIRM'])) ? $title : $user->lang[$title . '_CONFIRM'],
+			'MESSAGE_TITLE'		=> $confirm_title,
+			'MESSAGE_TEXT'		=> $confirm_text,
 
-			'YES_VALUE'			=> $user->lang['YES'],
+			'YES_VALUE'			=> $language->lang('YES'),
 			'S_CONFIRM_ACTION'	=> str_replace('&amp;', '&', $u_action), //inefficient, rewrite whole function
 			'S_HIDDEN_FIELDS'	=> $hidden . $s_hidden_fields
 		));
@@ -2225,6 +2275,8 @@ function confirm_box($check, $title = '', $hidden = '', $html_body = 'confirm_bo
 	{
 		page_footer();
 	}
+
+	exit; // unreachable, page_footer() above will call exit()
 }
 
 /**
@@ -2236,6 +2288,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 	global $request, $phpbb_container, $phpbb_dispatcher, $phpbb_log;
 
 	$err = '';
+	$form_name = 'login';
 
 	// Make sure user->setup() has been called
 	if (!$user->is_setup())
@@ -2311,8 +2364,19 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 			trigger_error('NO_AUTH_ADMIN_USER_DIFFER');
 		}
 
-		// If authentication is successful we redirect user to previous page
-		$result = $auth->login($username, $password, $autologin, $viewonline, $admin);
+		// Check form key
+		if ($password && !check_form_key($form_name))
+		{
+			$result = array(
+				'status' => false,
+				'error_msg' => 'FORM_INVALID',
+			);
+		}
+		else
+		{
+			// If authentication is successful we redirect user to previous page
+			$result = $auth->login($username, $password, $autologin, $viewonline, $admin);
+		}
 
 		// If admin authentication and login, we will log if it was a success or not...
 		// We also break the operation on the first non-success login - it could be argued that the user already knows
@@ -2344,10 +2408,12 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 			* @event core.login_box_redirect
 			* @var  string	redirect	Redirect string
 			* @var	bool	admin		Is admin?
+			* @var	array	result		Result from auth provider
 			* @since 3.1.0-RC5
 			* @changed 3.1.9-RC1 Removed undefined return variable
+			* @changed 3.2.4-RC1 Added result
 			*/
-			$vars = array('redirect', 'admin');
+			$vars = array('redirect', 'admin', 'result');
 			extract($phpbb_dispatcher->trigger_event('core.login_box_redirect', compact($vars)));
 
 			// append/replace SID (may change during the session for AOL users)
@@ -2461,9 +2527,12 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 		));
 	}
 
+	// Add form token for login box
+	add_form_key($form_name, '_LOGIN');
+
 	$s_hidden_fields = build_hidden_fields($s_hidden_fields);
 
-	$template->assign_vars(array(
+	$login_box_template_data = array(
 		'LOGIN_ERROR'		=> $err,
 		'LOGIN_EXPLAIN'		=> $l_explain,
 
@@ -2471,6 +2540,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 		'U_RESEND_ACTIVATION'	=> ($config['require_activation'] == USER_ACTIVATION_SELF && $config['email_enable']) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=resend_act') : '',
 		'U_TERMS_USE'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=terms'),
 		'U_PRIVACY'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy'),
+		'UA_PRIVACY'			=> addslashes(append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy')),
 
 		'S_DISPLAY_FULL_LOGIN'	=> ($s_display) ? true : false,
 		'S_HIDDEN_FIELDS' 		=> $s_hidden_fields,
@@ -2480,7 +2550,29 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 
 		'USERNAME_CREDENTIAL'	=> 'username',
 		'PASSWORD_CREDENTIAL'	=> ($admin) ? 'password_' . $credential : 'password',
-	));
+	);
+
+	/**
+	 * Event to add/modify login box template data
+	 *
+	 * @event core.login_box_modify_template_data
+	 * @var	int		admin							Flag whether user is admin
+	 * @var	string	username						User name
+	 * @var	int		autologin						Flag whether autologin is enabled
+	 * @var string	redirect						Redirect URL
+	 * @var	array	login_box_template_data			Array with the login box template data
+	 * @since 3.2.3-RC2
+	 */
+	$vars = array(
+		'admin',
+		'username',
+		'autologin',
+		'redirect',
+		'login_box_template_data',
+	);
+	extract($phpbb_dispatcher->trigger_event('core.login_box_modify_template_data', compact($vars)));
+
+	$template->assign_vars($login_box_template_data);
 
 	page_header($user->lang['LOGIN']);
 
@@ -2497,7 +2589,7 @@ function login_box($redirect = '', $l_explain = '', $l_success = '', $admin = fa
 */
 function login_forum_box($forum_data)
 {
-	global $db, $phpbb_container, $request, $template, $user, $phpbb_dispatcher;
+	global $db, $phpbb_container, $request, $template, $user, $phpbb_dispatcher, $phpbb_root_path, $phpEx;
 
 	$password = $request->variable('password', '', true);
 
@@ -2572,6 +2664,9 @@ function login_forum_box($forum_data)
 
 	page_header($user->lang['LOGIN']);
 
+	// Add form token for login box
+	add_form_key('login', '_LOGIN');
+
 	$template->assign_vars(array(
 		'FORUM_NAME'			=> isset($forum_data['forum_name']) ? $forum_data['forum_name'] : '',
 		'S_LOGIN_ACTION'		=> build_url(array('f')),
@@ -2581,6 +2676,8 @@ function login_forum_box($forum_data)
 	$template->set_filenames(array(
 		'body' => 'login_forum.html')
 	);
+
+	make_jumpbox(append_sid("{$phpbb_root_path}viewforum.$phpEx"), $forum_data['forum_id']);
 
 	page_footer();
 }
@@ -4342,6 +4439,19 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 	$controller_helper = $phpbb_container->get('controller.helper');
 	$notification_mark_hash = generate_link_hash('mark_all_notifications_read');
 
+	$s_login_redirect = build_hidden_fields(array('redirect' => $phpbb_path_helper->remove_web_root_path(build_url())));
+	/**
+	 * Workaround for missing template variable in pre phpBB 3.2.6 styles.
+	 * @deprecated 3.2.7 (To be removed: 3.3.0-a1)
+	 */
+	$form_token_login = $template->retrieve_var('S_FORM_TOKEN_LOGIN');
+	if (!empty($form_token_login))
+	{
+		$s_login_redirect .= $form_token_login;
+		// Remove S_FORM_TOKEN_LOGIN as it's already appended to S_LOGIN_REDIRECT
+		$template->assign_var('S_FORM_TOKEN_LOGIN', '');
+	}
+
 	// The following assigns all _common_ variables that may be used at any point in a template.
 	$template->assign_vars(array(
 		'SITENAME'						=> $config['sitename'],
@@ -4401,9 +4511,10 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'U_SEARCH_ACTIVE_TOPICS'=> append_sid("{$phpbb_root_path}search.$phpEx", 'search_id=active_topics'),
 		'U_DELETE_COOKIES'		=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=delete_cookies'),
 		'U_CONTACT_US'			=> ($config['contact_admin_form_enable'] && $config['email_enable']) ? append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=contactadmin') : '',
-		'U_TEAM'				=> ($user->data['user_id'] != ANONYMOUS && !$auth->acl_get('u_viewprofile')) ? '' : append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=team'),
+		'U_TEAM'				=> (!$auth->acl_get('u_viewprofile')) ? '' : append_sid("{$phpbb_root_path}memberlist.$phpEx", 'mode=team'),
 		'U_TERMS_USE'			=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=terms'),
 		'U_PRIVACY'				=> append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy'),
+		'UA_PRIVACY'			=> addslashes(append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=privacy')),
 		'U_RESTORE_PERMISSIONS'	=> ($user->data['user_perm_from'] && $auth->acl_get('a_switchperm')) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=restore_perm') : '',
 		'U_FEED'				=> $controller_helper->route('phpbb_feed_index'),
 
@@ -4430,7 +4541,7 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'S_TOPIC_ID'			=> $topic_id,
 
 		'S_LOGIN_ACTION'		=> ((!defined('ADMIN_START')) ? append_sid("{$phpbb_root_path}ucp.$phpEx", 'mode=login') : append_sid("{$phpbb_admin_path}index.$phpEx", false, true, $user->session_id)),
-		'S_LOGIN_REDIRECT'		=> build_hidden_fields(array('redirect' => $phpbb_path_helper->remove_web_root_path(build_url()))),
+		'S_LOGIN_REDIRECT'		=> $s_login_redirect,
 
 		'S_ENABLE_FEEDS'			=> ($config['feed_enable']) ? true : false,
 		'S_ENABLE_FEEDS_OVERALL'	=> ($config['feed_overall']) ? true : false,
@@ -4463,7 +4574,7 @@ function page_header($page_title = '', $display_online_list = false, $item_id = 
 		'S_COOKIE_NOTICE'		=> !empty($config['cookie_notice']),
 
 		'T_THEME_NAME'			=> rawurlencode($user->style['style_path']),
-		'T_THEME_LANG_NAME'		=> $user->data['user_lang'],
+		'T_THEME_LANG_NAME'		=> $user->lang_name,
 		'T_TEMPLATE_NAME'		=> $user->style['style_path'],
 		'T_SUPER_TEMPLATE_NAME'	=> rawurlencode((isset($user->style['style_parent_tree']) && $user->style['style_parent_tree']) ? $user->style['style_parent_tree'] : $user->style['style_path']),
 		'T_IMAGES'				=> 'images',

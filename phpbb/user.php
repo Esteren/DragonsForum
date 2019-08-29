@@ -189,6 +189,9 @@ class user extends \phpbb\session
 		/**
 		* Event to load language files and modify user data on every page
 		*
+		* Note: To load language file with this event, see description
+		* of lang_set_ext variable.
+		*
 		* @event core.user_setup
 		* @var	array	user_data			Array with user's data row
 		* @var	string	user_lang_name		Basename of the user's langauge
@@ -340,7 +343,7 @@ class user extends \phpbb\session
 		}
 
 		// Is board disabled and user not an admin or moderator?
-		if ($config['board_disable'] && !defined('IN_LOGIN') && !defined('SKIP_CHECK_DISABLED') && !$auth->acl_gets('a_', 'm_') && !$auth->acl_getf_global('m_'))
+		if ($config['board_disable'] && !defined('IN_INSTALL') && !defined('IN_LOGIN') && !defined('SKIP_CHECK_DISABLED') && !$auth->acl_gets('a_', 'm_') && !$auth->acl_getf_global('m_'))
 		{
 			if ($this->data['is_bot'])
 			{

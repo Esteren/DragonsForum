@@ -33,9 +33,20 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 	// Needed for handle_message_list_actions()
 	global $refresh, $submit, $preview;
 
-	include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-	include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
-	include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	if (!function_exists('generate_smilies'))
+	{
+		include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+	}
+
+	if (!function_exists('display_custom_bbcodes'))
+	{
+		include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+	}
+
+	if (!class_exists('parse_message'))
+	{
+		include($phpbb_root_path . 'includes/message_parser.' . $phpEx);
+	}
 
 	if (!$action)
 	{
@@ -48,7 +59,6 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 	$to_group_id	= $request->variable('g', 0);
 	$msg_id			= $request->variable('p', 0);
 	$draft_id		= $request->variable('d', 0);
-	$lastclick		= $request->variable('lastclick', 0);
 
 	// Reply to all triggered (quote/reply)
 	$reply_to_all	= $request->variable('reply_to_all', 0);
@@ -80,7 +90,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 	$group_helper = $phpbb_container->get('group_helper');
 
 	// Was cancel pressed? If so then redirect to the appropriate page
-	if ($cancel || ($current_time - $lastclick < 2 && $submit))
+	if ($cancel)
 	{
 		if ($msg_id)
 		{
@@ -125,7 +135,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		// Add groups to PM box
 		if ($config['allow_mass_pm'] && $auth->acl_get('u_masspm_group'))
 		{
-			$sql = 'SELECT g.group_id, g.group_name, g.group_type
+			$sql = 'SELECT g.group_id, g.group_name, g.group_type, g.group_colour
 				FROM ' . GROUPS_TABLE . ' g';
 
 			if (!$auth->acl_gets('a_group', 'a_groupadd', 'a_groupdel'))
@@ -148,7 +158,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 			$group_options = '';
 			while ($row = $db->sql_fetchrow($result))
 			{
-				$group_options .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '">' . $group_helper->get_name($row['group_name']) . '</option>';
+				$group_options .= '<option' . (($row['group_type'] == GROUP_SPECIAL) ? ' class="sep"' : '') . ' value="' . $row['group_id'] . '"' . ($row['group_colour'] ? ' style="color: #' . $row['group_colour'] . '"' : '') . '>' . $group_helper->get_name($row['group_name']) . '</option>';
 			}
 			$db->sql_freeresult($result);
 		}
@@ -659,13 +669,16 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		{
 			if (confirm_box(true))
 			{
+				$message_parser->message = $message;
+				$message_parser->parse($bbcode_status, $url_status, $smilies_status, $img_status, $flash_status, true, $url_status);
+
 				$sql = 'INSERT INTO ' . DRAFTS_TABLE . ' ' . $db->sql_build_array('INSERT', array(
 					'user_id'		=> $user->data['user_id'],
 					'topic_id'		=> 0,
 					'forum_id'		=> 0,
 					'save_time'		=> $current_time,
 					'draft_subject'	=> $subject,
-					'draft_message'	=> $message
+					'draft_message'	=> $message_parser->message,
 					)
 				);
 				$db->sql_query($sql);
@@ -954,7 +967,16 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 			$post_id = $request->variable('p', 0);
 			if ($config['allow_post_links'])
 			{
-				$message_link = "[url=" . generate_board_url() . "/viewtopic.$phpEx?p={$post_id}#p{$post_id}]{$user->lang['SUBJECT']}{$user->lang['COLON']} {$message_subject}[/url]\n\n";
+				$message_link = generate_board_url() . "/viewtopic.$phpEx?p={$post_id}#p{$post_id}";
+				$message_link_subject = "{$user->lang['SUBJECT']}{$user->lang['COLON']} {$message_subject}";
+				if ($bbcode_status)
+				{
+					$message_link = "[url=" . $message_link . "]" . $message_link_subject . "[/url]\n\n";
+				}
+				else
+				{
+					$message_link = $message_link . " - " . $message_link_subject . "\n\n";
+				}
 			}
 			else
 			{
@@ -974,11 +996,12 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		{
 			$quote_attributes['post_id'] = $post['msg_id'];
 		}
-		$quote_text = $phpbb_container->get('text_formatter.utils')->generate_quote(
-			censor_text($message_parser->message),
-			$quote_attributes
-		);
-		$message_parser->message = $message_link . $quote_text . "\n\n";
+
+		/** @var \phpbb\language\language $language */
+		$language = $phpbb_container->get('language');
+		/** @var \phpbb\textformatter\utils_interface $text_formatter_utils */
+		$text_formatter_utils = $phpbb_container->get('text_formatter.utils');
+		phpbb_format_quote($language, $message_parser, $text_formatter_utils, $bbcode_status, $quote_attributes, $message_link);
 	}
 
 	if (($action == 'reply' || $action == 'quote' || $action == 'quotepost') && !$preview && !$refresh)
@@ -1174,8 +1197,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		break;
 	}
 
-	$s_hidden_fields = '<input type="hidden" name="lastclick" value="' . $current_time . '" />';
-	$s_hidden_fields .= (isset($check_value)) ? '<input type="hidden" name="status_switch" value="' . $check_value . '" />' : '';
+	$s_hidden_fields = (isset($check_value)) ? '<input type="hidden" name="status_switch" value="' . $check_value . '" />' : '';
 	$s_hidden_fields .= ($draft_id || isset($_REQUEST['draft_loaded'])) ? '<input type="hidden" name="draft_loaded" value="' . ((isset($_REQUEST['draft_loaded'])) ? $request->variable('draft_loaded', 0) : $draft_id) . '" />' : '';
 
 	$form_enctype = (@ini_get('file_uploads') == '0' || strtolower(@ini_get('file_uploads')) == 'off' || !$config['allow_pm_attach'] || !$auth->acl_get('u_pm_attach')) ? '' : ' enctype="multipart/form-data"';
@@ -1184,7 +1206,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 	$controller_helper = $phpbb_container->get('controller.helper');
 
 	// Start assigning vars for main posting page ...
-	$template->assign_vars(array(
+	$template_ary = array(
 		'L_POST_A'					=> $page_title,
 		'L_ICON'					=> $user->lang['PM_ICON'],
 		'L_MESSAGE_BODY_EXPLAIN'	=> $user->lang('MESSAGE_BODY_EXPLAIN', (int) $config['max_post_chars']),
@@ -1229,7 +1251,19 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 		'S_CLOSE_PROGRESS_WINDOW'	=> isset($_POST['add_file']),
 		'U_PROGRESS_BAR'			=> append_sid("{$phpbb_root_path}posting.$phpEx", 'f=0&amp;mode=popup'),
 		'UA_PROGRESS_BAR'			=> addslashes(append_sid("{$phpbb_root_path}posting.$phpEx", 'f=0&amp;mode=popup')),
-	));
+	);
+
+	/**
+	* Modify the default template vars
+	*
+	* @event core.ucp_pm_compose_template
+	* @var	array	template_ary	Template variables
+	* @since 3.2.6-RC1
+	*/
+	$vars = array('template_ary');
+	extract($phpbb_dispatcher->trigger_event('core.ucp_pm_compose_template', compact($vars)));
+
+	$template->assign_vars($template_ary);
 
 	// Build custom bbcodes array
 	display_custom_bbcodes();
@@ -1262,7 +1296,7 @@ function compose_pm($id, $mode, $action, $user_folders = array())
 function handle_message_list_actions(&$address_list, &$error, $remove_u, $remove_g, $add_to, $add_bcc)
 {
 	global $auth, $db, $user;
-	global $request;
+	global $request, $phpbb_dispatcher;
 
 	// Delete User [TO/BCC]
 	if ($remove_u && $request->variable('remove_u', array(0 => '')))
@@ -1439,6 +1473,21 @@ function handle_message_list_actions(&$address_list, &$error, $remove_u, $remove
 			$error[] = $user->lang['PM_USERS_REMOVED_NO_PERMISSION'];
 		}
 	}
+
+	/**
+	* Event for additional message list actions
+	*
+	* @event core.message_list_actions
+	* @var	array	address_list		The assoc array with the recipient user/group ids
+	* @var	array	error				The array containing error data
+	* @var	bool	remove_u			The variable for removing a user
+	* @var	bool	remove_g			The variable for removing a group
+	* @var	bool	add_to				The variable for adding a user to the [TO] field
+	* @var	bool	add_bcc				The variable for adding a user to the [BCC] field
+	* @since 3.2.4-RC1
+	*/
+	$vars = array('address_list', 'error', 'remove_u', 'remove_g', 'add_to', 'add_bcc');
+	extract($phpbb_dispatcher->trigger_event('core.message_list_actions', compact($vars)));
 }
 
 /**

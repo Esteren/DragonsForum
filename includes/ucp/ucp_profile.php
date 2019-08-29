@@ -159,7 +159,7 @@ class ucp_profile
 							$phpbb_log->add('user', $user->data['user_id'], $user->ip, 'LOG_USER_UPDATE_EMAIL', false, array(
 								'reportee_id' => $user->data['user_id'],
 								$user->data['username'],
-								$data['user_email'],
+								$user->data['user_email'],
 								$data['email']
 							));
 						}
@@ -469,8 +469,15 @@ class ucp_profile
 					trigger_error('NO_AUTH_SIGNATURE');
 				}
 
-				include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
-				include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+				if (!function_exists('generate_smilies'))
+				{
+					include($phpbb_root_path . 'includes/functions_posting.' . $phpEx);
+				}
+
+				if (!function_exists('display_custom_bbcodes'))
+				{
+					include($phpbb_root_path . 'includes/functions_display.' . $phpEx);
+				}
 
 				$preview	= $request->is_set_post('preview');
 

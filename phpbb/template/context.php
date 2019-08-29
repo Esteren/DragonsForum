@@ -201,7 +201,8 @@ class context
 			$pos = strpos($blocks[$i], '[');
 			$name = ($pos !== false) ? substr($blocks[$i], 0, $pos) : $blocks[$i];
 			$block = &$block[$name];
-			$index = (!$pos || strpos($blocks[$i], '[]') === $pos) ? (count($block) - 1) : (min((int) substr($blocks[$i], $pos + 1, -1), count($block) - 1));
+			$block_count = empty($block) ? 0 : count($block) - 1;
+			$index = (!$pos || strpos($blocks[$i], '[]') === $pos) ? $block_count : (min((int) substr($blocks[$i], $pos + 1, -1), $block_count));
 			$block = &$block[$index];
 		}
 
@@ -274,6 +275,11 @@ class context
 			{
 				$name = substr($blocks[$i], 0, $pos);
 
+				if (empty($block[$name]))
+				{
+					return array();
+				}
+
 				if (strpos($blocks[$i], '[]') === $pos)
 				{
 					$index = count($block[$name]) - 1;
@@ -286,6 +292,11 @@ class context
 			else
 			{
 				$name = $blocks[$i];
+				if (empty($block[$name]))
+				{
+					return array();
+				}
+
 				$index = count($block[$name]) - 1;
 			}
 			$block = $block[$name];

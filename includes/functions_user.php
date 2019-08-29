@@ -26,8 +26,10 @@ if (!defined('IN_PHPBB'))
 * @param array &$user_id_ary The user ids to check or empty if usernames used
 * @param array &$username_ary The usernames to check or empty if user ids used
 * @param mixed $user_type Array of user types to check, false if not restricting by user type
+* @param boolean $update_references If false, the supplied array is unset and appears unchanged from where it was called
+* @return boolean|string Returns false on success, error string on failure
 */
-function user_get_id_name(&$user_id_ary, &$username_ary, $user_type = false)
+function user_get_id_name(&$user_id_ary, &$username_ary, $user_type = false, $update_references = false)
 {
 	global $db;
 
@@ -50,7 +52,13 @@ function user_get_id_name(&$user_id_ary, &$username_ary, $user_type = false)
 	}
 
 	$sql_in = ($which_ary == 'user_id_ary') ? array_map('intval', ${$which_ary}) : array_map('utf8_clean_string', ${$which_ary});
-	unset(${$which_ary});
+
+	// By unsetting the array here, the values passed in at the point user_get_id_name() was called will be retained.
+	// Otherwise, if we don't unset (as the array was passed by reference) the original array will be updated below.
+	if ($update_references === false)
+	{
+		unset(${$which_ary});
+	}
 
 	$user_id_ary = $username_ary = array();
 
@@ -461,9 +469,11 @@ function user_delete($mode, $user_ids, $retain_username = true)
 	* @var	array	user_ids	IDs of the deleted user
 	* @var	mixed	retain_username	True if username should be retained
 	*				or false if not
+	* @var	array	user_rows	Array containing data of the deleted users
 	* @since 3.1.0-a1
+	* @changed 3.2.4-RC1 Added user_rows
 	*/
-	$vars = array('mode', 'user_ids', 'retain_username');
+	$vars = array('mode', 'user_ids', 'retain_username', 'user_rows');
 	extract($phpbb_dispatcher->trigger_event('core.delete_user_before', compact($vars)));
 
 	// Before we begin, we will remove the reports the user issued.
@@ -664,8 +674,30 @@ function user_delete($mode, $user_ids, $retain_username = true)
 		delete_posts('poster_id', $user_ids);
 	}
 
-	$table_ary = array(USERS_TABLE, USER_GROUP_TABLE, TOPICS_WATCH_TABLE, FORUMS_WATCH_TABLE, ACL_USERS_TABLE, TOPICS_TRACK_TABLE, TOPICS_POSTED_TABLE, FORUMS_TRACK_TABLE, PROFILE_FIELDS_DATA_TABLE, MODERATOR_CACHE_TABLE, DRAFTS_TABLE, BOOKMARKS_TABLE, SESSIONS_KEYS_TABLE, PRIVMSGS_FOLDER_TABLE, PRIVMSGS_RULES_TABLE);
+	$table_ary = [
+		USERS_TABLE,
+		USER_GROUP_TABLE,
+		TOPICS_WATCH_TABLE,
+		FORUMS_WATCH_TABLE,
+		ACL_USERS_TABLE,
+		TOPICS_TRACK_TABLE,
+		TOPICS_POSTED_TABLE,
+		FORUMS_TRACK_TABLE,
+		PROFILE_FIELDS_DATA_TABLE,
+		MODERATOR_CACHE_TABLE,
+		DRAFTS_TABLE,
+		BOOKMARKS_TABLE,
+		SESSIONS_KEYS_TABLE,
+		PRIVMSGS_FOLDER_TABLE,
+		PRIVMSGS_RULES_TABLE,
+		$phpbb_container->getParameter('tables.auth_provider_oauth_token_storage'),
+		$phpbb_container->getParameter('tables.auth_provider_oauth_states'),
+		$phpbb_container->getParameter('tables.auth_provider_oauth_account_assoc'),
+		$phpbb_container->getParameter('tables.user_notifications')
+	];
 
+	// Ignore errors on deleting from non-existent tables, e.g. when migrating
+	$db->sql_return_on_error(true);
 	// Delete the miscellaneous (non-post) data for the user
 	foreach ($table_ary as $table)
 	{
@@ -673,6 +705,7 @@ function user_delete($mode, $user_ids, $retain_username = true)
 			WHERE " . $user_id_sql;
 		$db->sql_query($sql);
 	}
+	$db->sql_return_on_error();
 
 	$cache->destroy('sql', MODERATOR_CACHE_TABLE);
 
@@ -1427,20 +1460,13 @@ function user_ipwhois($ip)
 		return '';
 	}
 
-	if (preg_match(get_preg_expression('ipv4'), $ip))
-	{
-		// IPv4 address
-		$whois_host = 'whois.arin.net.';
-	}
-	else if (preg_match(get_preg_expression('ipv6'), $ip))
-	{
-		// IPv6 address
-		$whois_host = 'whois.sixxs.net.';
-	}
-	else
+	if (!preg_match(get_preg_expression('ipv4'), $ip) && !preg_match(get_preg_expression('ipv6'), $ip))
 	{
 		return '';
 	}
+
+	// IPv4 & IPv6 addresses
+	$whois_host = 'whois.arin.net.';
 
 	$ipwhois = '';
 
@@ -1692,16 +1718,20 @@ function phpbb_validate_timezone($timezone)
 	return (in_array($timezone, phpbb_get_timezone_identifiers($timezone))) ? false : 'TIMEZONE_INVALID';
 }
 
-/**
-* Check to see if the username has been taken, or if it is disallowed.
-* Also checks if it includes the " character, which we don't allow in usernames.
-* Used for registering, changing names, and posting anonymously with a username
-*
-* @param string $username The username to check
-* @param string $allowed_username An allowed username, default being $user->data['username']
-*
-* @return	mixed	Either false if validation succeeded or a string which will be used as the error message (with the variable name appended)
-*/
+/***
+ * Validate Username
+ *
+ * Check to see if the username has been taken, or if it is disallowed.
+ * Also checks if it includes the " character or the 4-bytes Unicode ones
+ * (aka emojis) which we don't allow in usernames.
+ * Used for registering, changing names, and posting anonymously with a username
+ *
+ * @param string	$username				The username to check
+ * @param string	$allowed_username		An allowed username, default being $user->data['username']
+ *
+ * @return mixed							Either false if validation succeeded or a string which will be
+ *											used as the error message (with the variable name appended)
+ */
 function validate_username($username, $allowed_username = false)
 {
 	global $config, $db, $user, $cache;
@@ -1712,6 +1742,14 @@ function validate_username($username, $allowed_username = false)
 	if ($allowed_username == $clean_username)
 	{
 		return false;
+	}
+
+	// The very first check is for
+	// out-of-bounds characters that are currently
+	// not supported by utf8_bin in MySQL
+	if (preg_match('/[\x{10000}-\x{10FFFF}]/u', $username))
+	{
+		return 'INVALID_EMOJIS';
 	}
 
 	// ... fast checks first.
@@ -1904,9 +1942,9 @@ function validate_user_email($email, $allowed_email = false)
 		return $validate_email;
 	}
 
-	if (($ban_reason = $user->check_ban(false, false, $email, true)) !== false)
+	if (($ban = $user->check_ban(false, false, $email, true)) !== false)
 	{
-		return ($ban_reason === true) ? 'EMAIL_BANNED' : $ban_reason;
+		return ($ban === true) ? 'EMAIL_BANNED' : (!empty($ban['ban_give_reason']) ? $ban['ban_give_reason'] : $ban);
 	}
 
 	if (!$config['allow_emailreuse'])
@@ -2679,6 +2717,13 @@ function group_user_add($group_id, $user_id_ary = false, $username_ary = false, 
 	if (empty($user_id_ary) || $result !== false)
 	{
 		return 'NO_USER';
+	}
+
+	// Because the item that gets passed into the previous function is unset, the reference is lost and our original
+	// array is retained - so we know there's a problem if there's a different number of ids to usernames now.
+	if (count($user_id_ary) != count($username_ary))
+	{
+		return 'GROUP_USERS_INVALID';
 	}
 
 	// Remove users who are already members of this group
@@ -3600,11 +3645,6 @@ function remove_newly_registered($user_id, $user_data = false)
 		{
 			$user_data  = $user_row;
 		}
-	}
-
-	if (empty($user_data['user_new']))
-	{
-		return false;
 	}
 
 	$sql = 'SELECT group_id

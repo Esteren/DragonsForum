@@ -198,6 +198,9 @@ if (!($forum_data['forum_type'] == FORUM_POST || (($forum_data['forum_flags'] & 
 // We also make this circumstance available to the template in case we want to display a notice. ;)
 if (!$auth->acl_gets('f_read', 'f_list_topics', $forum_id))
 {
+	// Add form token for login box
+	add_form_key('login', '_LOGIN');
+
 	$template->assign_vars(array(
 		'S_NO_READ_ACCESS'		=> true,
 	));
@@ -284,6 +287,20 @@ $limit_days = array(0 => $user->lang['ALL_TOPICS'], 1 => $user->lang['1_DAY'], 7
 
 $sort_by_text = array('a' => $user->lang['AUTHOR'], 't' => $user->lang['POST_TIME'], 'r' => $user->lang['REPLIES'], 's' => $user->lang['SUBJECT'], 'v' => $user->lang['VIEWS']);
 $sort_by_sql = array('a' => 't.topic_first_poster_name', 't' => array('t.topic_last_post_time', 't.topic_last_post_id'), 'r' => (($auth->acl_get('m_approve', $forum_id)) ? 't.topic_posts_approved + t.topic_posts_unapproved + t.topic_posts_softdeleted' : 't.topic_posts_approved'), 's' => 'LOWER(t.topic_title)', 'v' => 't.topic_views');
+
+/**
+ * Modify the topic ordering if needed
+ *
+ * @event core.viewforum_modify_topic_ordering
+ * @var array	sort_by_text	Topic ordering options
+ * @var array	sort_by_sql		Topic orderings options SQL equivalent
+ * @since 3.2.5-RC1
+ */
+$vars = array(
+	'sort_by_text',
+	'sort_by_sql',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_topic_ordering', compact($vars)));
 
 $s_limit_days = $s_sort_key = $s_sort_dir = $u_sort_param = '';
 gen_sort_selects($limit_days, $sort_by_text, $sort_days, $sort_key, $sort_dir, $s_limit_days, $s_sort_key, $s_sort_dir, $u_sort_param, $default_sort_days, $default_sort_key, $default_sort_dir);
@@ -506,7 +523,7 @@ if ($forum_data['forum_type'] == FORUM_POST)
 
 		'WHERE'		=> '(t.forum_id = ' . $forum_id . '
 				AND t.topic_type = ' . POST_ANNOUNCE . ') OR
-			(' . $db->sql_in_set('t.forum_id', $g_forum_ary) . '
+			(' . $db->sql_in_set('t.forum_id', $g_forum_ary, false, true) . '
 				AND t.topic_type = ' . POST_GLOBAL . ')',
 
 		'ORDER_BY'	=> 't.topic_time DESC',
@@ -597,6 +614,18 @@ else
 	$direction = (($sort_dir == 'd') ? 'DESC' : 'ASC');
 	$sql_start = $start;
 }
+
+/**
+ * Modify the topics sort ordering if needed
+ *
+ * @event core.viewforum_modify_sort_direction
+ * @var string	direction	Topics sort order
+ * @since 3.2.5-RC1
+ */
+$vars = array(
+	'direction',
+);
+extract($phpbb_dispatcher->trigger_event('core.viewforum_modify_sort_direction', compact($vars)));
 
 if (is_array($sort_by_sql[$sort_key]))
 {

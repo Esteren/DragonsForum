@@ -1299,7 +1299,12 @@ class session
 			trigger_error($message);
 		}
 
-		return ($banned && $ban_row['ban_give_reason']) ? $ban_row['ban_give_reason'] : $banned;
+		if (!empty($ban_row))
+		{
+			$ban_row['ban_triggered_by'] = $ban_triggered_by;
+		}
+
+		return ($banned && $ban_row) ? $ban_row : $banned;
 	}
 
 	/**
@@ -1614,13 +1619,15 @@ class session
 			return;
 		}
 
+		// Do not update the session page for ajax requests, so the view online still works as intended
+		$page_changed = $this->update_session_page && $this->data['session_page'] != $this->page['page'] && !$request->is_ajax();
+
 		// Only update session DB a minute or so after last update or if page changes
-		if ($this->time_now - ((isset($this->data['session_time'])) ? $this->data['session_time'] : 0) > 60 || ($this->update_session_page && $this->data['session_page'] != $this->page['page']))
+		if ($this->time_now - (isset($this->data['session_time']) ? $this->data['session_time'] : 0) > 60 || $page_changed)
 		{
 			$sql_ary = array('session_time' => $this->time_now);
 
-			// Do not update the session page for ajax requests, so the view online still works as intended
-			if ($this->update_session_page && !$request->is_ajax())
+			if ($page_changed)
 			{
 				$sql_ary['session_page'] = substr($this->page['page'], 0, 199);
 				$sql_ary['session_forum_id'] = $this->page['forum'];
