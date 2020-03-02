@@ -607,6 +607,7 @@ ul.linklist:after,
 }
 
 .smilies {
+	max-width: 20px;
 	vertical-align: text-bottom;
 }
 
